@@ -1,0 +1,64 @@
+name: educ-map
+recipe: laravel
+config:
+  webroot: public
+  xdebug: false
+  php: "8.4"
+  via: nginx
+  database: postgres:14
+
+services:
+  appserver:
+    overrides:
+      environment:
+        XDEBUG_MODE: "debug,develop,coverage"
+        PHP_IDE_CONFIG: "serverName=appserver"
+        XDEBUG_CONFIG: "discover_client_host=0 client_host=host.docker.internal"
+    build_as_root:
+      - curl -sS https://getcomposer.org/installer | php
+      - mv composer.phar /usr/local/bin/composer
+      - cd /tmp && laravel new temp-project --no-interaction
+      - rm -rf /tmp/temp-project/.git* || true
+      - if [ "$(ls -A /app)" = "" ]; then cp -a /tmp/temp-project/. /app/; fi
+      - rm -rf /tmp/temp-project
+
+  database:
+    type: postgres:14
+    creds:
+      user: postgres
+      password: postgres
+      database: educ_map
+
+tooling:
+  psql:
+    service: database
+    cmd: psql -U postgres -h localhost
+  
+  pgdump:
+    service: database
+    cmd: pg_dump -U postgres
+  
+  artisan:
+    service: appserver
+    cmd: php artisan
+
+  xdebug-on:
+    service: appserver
+    description: Enable Xdebug.
+    user: root
+    cmd:
+      - docker-php-ext-enable xdebug && kill -USR2 $(pgrep -o php-fpm) > /dev/null || /etc/init.d/nginx reload
+      - tput setaf 2 && echo "Xdebug On" && tput sgr 0 && echo
+
+  xdebug-off:
+    service: appserver
+    description: Disable Xdebug.
+    user: root
+    cmd:
+      - rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && kill -USR2 $(pgrep -o php-fpm) > /dev/null || /etc/init.d/nginx reload
+      - tput setaf 1 && echo "Xdebug Off" && tput sgr 0 && echo
+
+excludes:
+  - vendor
+  - node_modules
+

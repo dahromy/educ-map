@@ -1,0 +1,1 @@
+composer global require -n laravel/installer:^4.0.0

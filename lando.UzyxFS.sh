@@ -1,0 +1,1 @@
+/helpers/install-composer.sh 2.2.22
