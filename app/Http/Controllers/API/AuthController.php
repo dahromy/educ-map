@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @OA\Tag(
+ *     name="Authentication",
+ *     description="Endpoints for user authentication and profile management"
+ * )
+ */
 class AuthController extends Controller
 {
     /**
@@ -18,6 +24,50 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     *
+     * @OA\Post(
+     *     path="/api/register",
+     *     summary="Create a new user account",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password", "password_confirmation"},
+     *             @OA\Property(property="name", type="string", example="Test User"),
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="User registered successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="User registered successfully"),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Test User"),
+     *                 @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *                 @OA\Property(property="roles", type="array", @OA\Items(type="string"), example={"ROLE_USER"})
+     *             ),
+     *             @OA\Property(property="token", type="string", example="1|laravel_sanctum_token...")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(property="email", type="array", @OA\Items(type="string"), example={"The email has already been taken."})
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function register(Request $request): JsonResponse
     {
@@ -62,6 +112,51 @@ class AuthController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     *
+     * @OA\Post(
+     *     path="/api/login",
+     *     summary="Login to get an authentication token",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Test User"),
+     *                 @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *                 @OA\Property(property="roles", type="array", @OA\Items(type="string"), example={"ROLE_USER"})
+     *             ),
+     *             @OA\Property(property="token", type="string", example="1|laravel_sanctum_token...")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid credentials",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="The provided credentials are incorrect."
+     *             ),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(property="email", type="array", @OA\Items(type="string"), example={"The provided credentials are incorrect."})
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function login(Request $request): JsonResponse
     {
@@ -98,6 +193,31 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/me",
+     *     summary="Get the currently authenticated user's profile",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User profile retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Test User"),
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="roles", type="array", @OA\Items(type="string"), example={"ROLE_USER"}),
+     *             @OA\Property(property="associated_establishment", type="object", nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated")
+     *         )
+     *     )
+     * )
      */
     public function me(Request $request): JsonResponse
     {
@@ -117,6 +237,56 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     *
+     * @OA\Put(
+     *     path="/api/me",
+     *     summary="Update the currently authenticated user's profile",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Updated Name"),
+     *             @OA\Property(property="email", type="string", format="email", example="updated@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="newPassword123"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="newPassword123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Profile updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Profile updated successfully"),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Updated Name"),
+     *                 @OA\Property(property="email", type="string", format="email", example="updated@example.com"),
+     *                 @OA\Property(property="roles", type="array", @OA\Items(type="string"), example={"ROLE_USER"}),
+     *                 @OA\Property(property="associated_establishment", type="object", nullable=true)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(property="email", type="array", @OA\Items(type="string"), example={"The email has already been taken."})
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function update(Request $request): JsonResponse
     {
@@ -159,6 +329,27 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     *
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="Invalidate the current authentication token",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User logged out successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="User logged out successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated")
+     *         )
+     *     )
+     * )
      */
     public function logout(Request $request): JsonResponse
     {
@@ -169,6 +360,4 @@ class AuthController extends Controller
             'message' => 'User logged out successfully',
         ]);
     }
-
-    // Previous createToken method removed as we're now using Sanctum directly
 }

@@ -2,110 +2,1652 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Educ-Map API Documentation",
-        "description": "API documentation for Educ-Map - Higher Education Institutions Directory in Madagascar",
+        "description": "API for higher education institutions directory in Madagascar",
         "contact": {
-            "name": "Educ-Map Support Team",
+            "name": "Educ-Map Support",
             "email": "contact@educ-map.mg"
-        },
-        "license": {
-            "name": "MIT",
-            "url": "https://opensource.org/licenses/MIT"
         },
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://localhost:8000/api",
+            "url": "https://educ-map.lndo.site",
             "description": "Educ-Map API Server"
+        },
+        {
+            "url": ""
         }
     ],
     "paths": {
-        "/api": {}
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Create a new user account",
+                "description": "Register a new user.",
+                "operationId": "a718f172ff3ac464d723835815f8fb57",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Test User"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User registered successfully"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Test User"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "test@example.com"
+                                                },
+                                                "roles": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "ROLE_USER"
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|laravel_sanctum_token..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "The email has already been taken."
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login to get an authentication token",
+                "description": "Login a user.",
+                "operationId": "44212a9096e4b09358281e9ec8a0701d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Test User"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "test@example.com"
+                                                },
+                                                "roles": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "ROLE_USER"
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|laravel_sanctum_token..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The provided credentials are incorrect."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "The provided credentials are incorrect."
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get the currently authenticated user's profile",
+                "description": "Get the authenticated user profile.",
+                "operationId": "f606b7972b0f95109c9cd5b591061f41",
+                "responses": {
+                    "200": {
+                        "description": "User profile retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Test User"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "test@example.com"
+                                        },
+                                        "roles": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": [
+                                                "ROLE_USER"
+                                            ]
+                                        },
+                                        "associated_establishment": {
+                                            "type": "object",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Update the currently authenticated user's profile",
+                "description": "Update user profile.",
+                "operationId": "d91fb9f3d0083514cc5ce6a50d001bad",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Name"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "updated@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newPassword123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newPassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile updated successfully"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Updated Name"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "updated@example.com"
+                                                },
+                                                "roles": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "ROLE_USER"
+                                                    ]
+                                                },
+                                                "associated_establishment": {
+                                                    "type": "object",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "The email has already been taken."
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Invalidate the current authentication token",
+                "description": "Logout a user by invalidating the token.",
+                "operationId": "79854151e609bd20032aa5aa4d5a35c0",
+                "responses": {
+                    "200": {
+                        "description": "User logged out successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/establishments": {
+            "get": {
+                "tags": [
+                    "Establishments"
+                ],
+                "summary": "Get a paginated list of establishments with optional filtering and sorting",
+                "description": "Display a listing of the establishments with filtering options.",
+                "operationId": "f49f6c92f5a721f0b976ba540c3c4bc8",
+                "parameters": [
+                    {
+                        "name": "region",
+                        "in": "query",
+                        "description": "Filter by region name (exact match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Filter by establishment name (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "abbreviation",
+                        "in": "query",
+                        "description": "Filter by abbreviation (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Filter by category name (exact match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "domain",
+                        "in": "query",
+                        "description": "Filter by domain name (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "label",
+                        "in": "query",
+                        "description": "Filter by label name (exact match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reference_start_date",
+                        "in": "query",
+                        "description": "Filter by references with date after this value (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "reference_end_date",
+                        "in": "query",
+                        "description": "Filter by references with date before this value (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by (name, student_count, reference_date)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "name",
+                            "enum": [
+                                "name",
+                                "student_count",
+                                "reference_date"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "Sort direction (asc or desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15,
+                            "maximum": 100,
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of establishments",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Ecole Supérieure des Sciences Agronomiques"
+                                                    },
+                                                    "abbreviation": {
+                                                        "type": "string",
+                                                        "example": "ESSA"
+                                                    },
+                                                    "logo_url": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "address": {
+                                                        "type": "string"
+                                                    },
+                                                    "region": {
+                                                        "type": "string"
+                                                    },
+                                                    "latitude": {
+                                                        "type": "number",
+                                                        "format": "float"
+                                                    },
+                                                    "longitude": {
+                                                        "type": "number",
+                                                        "format": "float"
+                                                    },
+                                                    "category": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "links": {
+                                            "properties": {
+                                                "first": {
+                                                    "type": "string"
+                                                },
+                                                "last": {
+                                                    "type": "string"
+                                                },
+                                                "prev": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "next": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "from": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                },
+                                                "path": {
+                                                    "type": "string"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "to": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "links": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "label": {
+                                                                "type": "string"
+                                                            },
+                                                            "active": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Establishments"
+                ],
+                "summary": "Create a new establishment",
+                "description": "Store a newly created establishment in storage.",
+                "operationId": "1b279e48bd9141a0870606cd6f9a7928",
+                "requestBody": {
+                    "description": "Establishment data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "abbreviation": {
+                                        "type": "string"
+                                    },
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "region": {
+                                        "type": "string"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "website": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "student_count": {
+                                        "type": "integer"
+                                    },
+                                    "success_rate": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "professional_insertion_rate": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "first_habilitation_year": {
+                                        "type": "integer"
+                                    },
+                                    "labels": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Establishment created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/api/establishments/{id}": {
+            "get": {
+                "tags": [
+                    "Establishments"
+                ],
+                "summary": "Get establishment details",
+                "description": "Display the specified establishment.",
+                "operationId": "9c39c1f3cfb0d8b690f31253472f149b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the establishment to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Establishment details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "abbreviation": {
+                                                    "type": "string"
+                                                },
+                                                "logo_url": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "address": {
+                                                    "type": "string"
+                                                },
+                                                "region": {
+                                                    "type": "string"
+                                                },
+                                                "latitude": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "longitude": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "website": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "student_count": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "success_rate": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "nullable": true
+                                                },
+                                                "professional_insertion_rate": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "nullable": true
+                                                },
+                                                "first_habilitation_year": {
+                                                    "type": "integer",
+                                                    "nullable": true
+                                                },
+                                                "category": {
+                                                    "type": "object"
+                                                },
+                                                "departments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "labels": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "program_offerings": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Establishment not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Establishments"
+                ],
+                "summary": "Update an existing establishment",
+                "description": "Update the specified establishment in storage.",
+                "operationId": "cf6826fefe96e123a317af3107f3eb7a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the establishment to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "abbreviation": {
+                                        "type": "string"
+                                    },
+                                    "category_id": {
+                                        "type": "integer"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "region": {
+                                        "type": "string"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "website": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "student_count": {
+                                        "type": "integer"
+                                    },
+                                    "success_rate": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "professional_insertion_rate": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "first_habilitation_year": {
+                                        "type": "integer"
+                                    },
+                                    "labels": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Establishment updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Establishment not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Establishments"
+                ],
+                "summary": "Delete an establishment",
+                "description": "Remove the specified establishment from storage.",
+                "operationId": "58efb50be5573a7ed9ee9f46ec4cc180",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the establishment to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Establishment deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Establishment not found"
+                    }
+                }
+            }
+        },
+        "/api/establishments/recent": {
+            "get": {
+                "tags": [
+                    "Establishments"
+                ],
+                "summary": "Get recently added establishments",
+                "description": "Get recently added establishments or those with recent accreditations.",
+                "operationId": "b5c68b91a88f2e3f98d27e2873db2358",
+                "responses": {
+                    "200": {
+                        "description": "List of recent establishments",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "abbreviation": {
+                                                        "type": "string"
+                                                    },
+                                                    "logo_url": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "address": {
+                                                        "type": "string"
+                                                    },
+                                                    "region": {
+                                                        "type": "string"
+                                                    },
+                                                    "category": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/map/markers": {
+            "get": {
+                "tags": [
+                    "Map & Comparison"
+                ],
+                "summary": "Get lightweight establishment data for map markers",
+                "description": "Get lightweight establishment data for map markers.",
+                "operationId": "7f66df71f9ac69da0a0adf5a07426056",
+                "responses": {
+                    "200": {
+                        "description": "List of map marker data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Ecole Supérieure des Sciences Agronomiques"
+                                                    },
+                                                    "abbreviation": {
+                                                        "type": "string",
+                                                        "example": "ESSA"
+                                                    },
+                                                    "latitude": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": -18.916779
+                                                    },
+                                                    "longitude": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 47.520526
+                                                    },
+                                                    "category_name": {
+                                                        "type": "string",
+                                                        "example": "Public University"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/compare": {
+            "get": {
+                "tags": [
+                    "Map & Comparison"
+                ],
+                "summary": "Compare multiple establishments side by side",
+                "description": "Compare multiple establishments side by side.",
+                "operationId": "bbc5057d4eee10926f6828ee3c16d337",
+                "parameters": [
+                    {
+                        "name": "ids[]",
+                        "in": "query",
+                        "description": "Array of establishment IDs to compare",
+                        "required": true,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comparison data for selected establishments",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "abbreviation": {
+                                                        "type": "string"
+                                                    },
+                                                    "student_count": {
+                                                        "type": "integer"
+                                                    },
+                                                    "success_rate": {
+                                                        "type": "number",
+                                                        "format": "float"
+                                                    },
+                                                    "professional_insertion_rate": {
+                                                        "type": "number",
+                                                        "format": "float"
+                                                    },
+                                                    "tuition_fees_info": {
+                                                        "type": "string"
+                                                    },
+                                                    "program_duration_info": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/me/searches": {
+            "get": {
+                "tags": [
+                    "Search History"
+                ],
+                "summary": "Get the authenticated user's saved searches",
+                "description": "Retrieve saved searches for the authenticated user.",
+                "operationId": "e626ff4dc82e746eba4896a60da1f65e",
+                "responses": {
+                    "200": {
+                        "description": "List of saved searches",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "user_id": {
+                                                "type": "integer"
+                                            },
+                                            "search_query_text": {
+                                                "type": "string",
+                                                "nullable": true
+                                            },
+                                            "search_filters": {
+                                                "type": "object",
+                                                "nullable": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Search History"
+                ],
+                "summary": "Save a search query and filters for the authenticated user",
+                "description": "Store a newly created search history in storage.",
+                "operationId": "48666e6496c8666209d84663a423ed14",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "search_query_text": {
+                                        "type": "string",
+                                        "example": "Computer Science Programs"
+                                    },
+                                    "search_filters": {
+                                        "type": "object",
+                                        "example": {
+                                            "region": "Analamanga",
+                                            "domain": "Computer Science"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Search saved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Search saved successfully"
+                                        },
+                                        "search": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "user_id": {
+                                                    "type": "integer"
+                                                },
+                                                "search_query_text": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "search_filters": {
+                                                    "type": "object",
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/me/searches/{id}": {
+            "delete": {
+                "tags": [
+                    "Search History"
+                ],
+                "summary": "Delete a saved search for the authenticated user",
+                "description": "Delete the specified search history.",
+                "operationId": "998e47ae21ba6b35d3c5ba988fd39694",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the saved search to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Search deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Search deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Unauthorized - not owner of this search"
+                    },
+                    "404": {
+                        "description": "Search not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
     },
     "components": {
         "schemas": {
-            "EstablishmentComparisonResource": {
-                "title": "Establishment Comparison Resource",
-                "description": "Resource for comparing establishments side by side",
-                "properties": {
-                    "id": {
-                        "description": "Establishment ID",
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "name": {
-                        "description": "Full name of the establishment",
-                        "type": "string",
-                        "example": "University of Antananarivo"
-                    },
-                    "abbreviation": {
-                        "description": "Abbreviation/acronym of the establishment",
-                        "type": "string",
-                        "example": "UA"
-                    },
-                    "indicators": {
-                        "description": "Performance indicators",
-                        "properties": {
-                            "student_count": {
-                                "type": "integer",
-                                "example": 30000
-                            },
-                            "success_rate": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 75.5
-                            },
-                            "professional_insertion_rate": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 68
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "program_info": {
-                        "description": "Program information",
-                        "properties": {
-                            "tuition_fees": {
-                                "type": "string",
-                                "example": "Average: 2,000,000 Ar per year"
-                            },
-                            "duration": {
-                                "type": "string",
-                                "example": "Range: 3-5 years"
-                            }
-                        },
-                        "type": "object"
-                    }
-                },
-                "type": "object"
-            },
             "EstablishmentDetailResource": {
                 "title": "Establishment Detail Resource",
-                "description": "Detailed establishment resource for single view",
+                "description": "Detailed establishment resource",
                 "properties": {
                     "id": {
-                        "description": "Establishment ID",
                         "type": "integer",
                         "example": 1
                     },
                     "name": {
-                        "description": "Full name of the establishment",
                         "type": "string",
-                        "example": "University of Antananarivo"
+                        "example": "Ecole Supérieure des Sciences Agronomiques"
                     },
                     "abbreviation": {
-                        "description": "Abbreviation/acronym of the establishment",
                         "type": "string",
-                        "example": "UA"
+                        "example": "ESSA"
+                    },
+                    "logo_url": {
+                        "type": "string",
+                        "example": "https://educ-map.mg/storage/logos/essa.png",
+                        "nullable": true
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "BP 175, 101 Antananarivo, Madagascar"
+                    },
+                    "region": {
+                        "type": "string",
+                        "example": "Analamanga"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": -18.916779
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 47.520526
+                    },
+                    "website": {
+                        "type": "string",
+                        "example": "https://essa.mg",
+                        "nullable": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "contact@essa.mg",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+261 20 22 318 35",
+                        "nullable": true
                     },
                     "description": {
-                        "description": "Detailed description of the establishment",
                         "type": "string",
-                        "example": "The largest and oldest university in Madagascar"
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "active"
+                    },
+                    "student_count": {
+                        "type": "integer",
+                        "example": 1200,
+                        "nullable": true
+                    },
+                    "success_rate": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 85.5,
+                        "nullable": true
+                    },
+                    "professional_insertion_rate": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 78.3,
+                        "nullable": true
+                    },
+                    "first_habilitation_year": {
+                        "type": "integer",
+                        "example": 1990,
+                        "nullable": true
                     },
                     "category": {
-                        "description": "Category information",
                         "properties": {
                             "id": {
                                 "type": "integer",
@@ -118,84 +1660,7 @@
                         },
                         "type": "object"
                     },
-                    "location": {
-                        "description": "Location information",
-                        "properties": {
-                            "address": {
-                                "type": "string",
-                                "example": "Ankatso, 101 Antananarivo"
-                            },
-                            "region": {
-                                "type": "string",
-                                "example": "Analamanga"
-                            },
-                            "city": {
-                                "type": "string",
-                                "example": "Antananarivo"
-                            },
-                            "latitude": {
-                                "type": "number",
-                                "format": "float",
-                                "example": -18.9167
-                            },
-                            "longitude": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 47.5167
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "contact": {
-                        "description": "Contact information",
-                        "properties": {
-                            "phone": {
-                                "type": "string",
-                                "example": "+261 20 22 326 39"
-                            },
-                            "email": {
-                                "type": "string",
-                                "example": "contact@univ-antananarivo.mg"
-                            },
-                            "website": {
-                                "type": "string",
-                                "example": "http://www.univ-antananarivo.mg"
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "indicators": {
-                        "description": "Performance indicators",
-                        "properties": {
-                            "student_count": {
-                                "type": "integer",
-                                "example": 30000
-                            },
-                            "success_rate": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 75.5
-                            },
-                            "professional_insertion_rate": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 68
-                            },
-                            "first_habilitation_year": {
-                                "type": "integer",
-                                "example": 1961
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "logo_url": {
-                        "description": "URL to the establishment's logo",
-                        "type": "string",
-                        "format": "url",
-                        "example": "http://example.com/ua-logo.png"
-                    },
                     "departments": {
-                        "description": "List of departments in this establishment",
                         "type": "array",
                         "items": {
                             "properties": {
@@ -205,18 +1670,13 @@
                                 },
                                 "name": {
                                     "type": "string",
-                                    "example": "Computer Science Department"
-                                },
-                                "abbreviation": {
-                                    "type": "string",
-                                    "example": "CS"
+                                    "example": "Department of Agronomy"
                                 }
                             },
                             "type": "object"
                         }
                     },
                     "labels": {
-                        "description": "List of labels for this establishment",
                         "type": "array",
                         "items": {
                             "properties": {
@@ -233,7 +1693,6 @@
                         }
                     },
                     "program_offerings": {
-                        "description": "Programs offered by this establishment",
                         "type": "array",
                         "items": {
                             "properties": {
@@ -241,52 +1700,46 @@
                                     "type": "integer",
                                     "example": 1
                                 },
-                                "domain": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "Computer Science"
-                                        }
-                                    },
-                                    "type": "object"
+                                "department_id": {
+                                    "type": "integer",
+                                    "example": 1
                                 },
-                                "grade": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "Licence"
-                                        }
-                                    },
-                                    "type": "object"
+                                "department_name": {
+                                    "type": "string",
+                                    "example": "Department of Agronomy"
                                 },
-                                "mention": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": 1
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "example": "Information Systems"
-                                        }
-                                    },
-                                    "type": "object"
+                                "domain_id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "domain_name": {
+                                    "type": "string",
+                                    "example": "Agricultural Sciences"
+                                },
+                                "grade_id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "grade_name": {
+                                    "type": "string",
+                                    "example": "Master"
+                                },
+                                "mention_id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "mention_name": {
+                                    "type": "string",
+                                    "example": "Agricultural Engineering"
                                 },
                                 "tuition_fees_info": {
                                     "type": "string",
-                                    "example": "2,000,000 Ar per year"
+                                    "example": "1,500,000 Ar/year",
+                                    "nullable": true
                                 },
                                 "program_duration_info": {
                                     "type": "string",
-                                    "example": "3 years"
+                                    "example": "2 years"
                                 },
                                 "accreditations": {
                                     "type": "array",
@@ -296,14 +1749,18 @@
                                                 "type": "integer",
                                                 "example": 1
                                             },
+                                            "reference_id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
                                             "reference_type": {
                                                 "type": "string",
-                                                "example": "Initial"
+                                                "example": "ministerial_decree"
                                             },
                                             "accreditation_date": {
                                                 "type": "string",
                                                 "format": "date",
-                                                "example": "2020-05-15"
+                                                "example": "2022-07-15"
                                             },
                                             "is_recent": {
                                                 "type": "boolean",
@@ -315,18 +1772,15 @@
                                                         "type": "integer",
                                                         "example": 1
                                                     },
-                                                    "title": {
-                                                        "type": "string",
-                                                        "example": "Decree No. 2020-123"
-                                                    },
                                                     "main_date": {
                                                         "type": "string",
                                                         "format": "date",
-                                                        "example": "2020-05-15"
+                                                        "example": "2022-07-15"
                                                     },
                                                     "document_url": {
                                                         "type": "string",
-                                                        "example": "http://example.com/decree-2020-123.pdf"
+                                                        "example": "https://educ-map.mg/storage/decrees/decree_2022_125.pdf",
+                                                        "nullable": true
                                                     }
                                                 },
                                                 "type": "object"
@@ -340,80 +1794,56 @@
                         }
                     },
                     "created_at": {
-                        "description": "Creation timestamp",
                         "type": "string",
-                        "format": "date-time",
-                        "example": "2023-05-02T12:34:56Z"
+                        "format": "date-time"
                     },
                     "updated_at": {
-                        "description": "Last update timestamp",
                         "type": "string",
-                        "format": "date-time",
-                        "example": "2023-05-02T12:34:56Z"
-                    }
-                },
-                "type": "object"
-            },
-            "EstablishmentMapResource": {
-                "title": "Establishment Map Resource",
-                "description": "Lightweight establishment resource for map markers",
-                "properties": {
-                    "id": {
-                        "description": "Establishment ID",
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "name": {
-                        "description": "Full name of the establishment",
-                        "type": "string",
-                        "example": "University of Antananarivo"
-                    },
-                    "abbreviation": {
-                        "description": "Abbreviation/acronym of the establishment",
-                        "type": "string",
-                        "example": "UA"
-                    },
-                    "latitude": {
-                        "description": "Geographical latitude",
-                        "type": "number",
-                        "format": "float",
-                        "example": -18.9167
-                    },
-                    "longitude": {
-                        "description": "Geographical longitude",
-                        "type": "number",
-                        "format": "float",
-                        "example": 47.5167
-                    },
-                    "category_name": {
-                        "description": "Category name for display on map",
-                        "type": "string",
-                        "example": "Public University"
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
             },
             "EstablishmentResource": {
                 "title": "Establishment Resource",
-                "description": "Establishment resource for list views",
+                "description": "Establishment resource for list view",
                 "properties": {
                     "id": {
-                        "description": "Establishment ID",
                         "type": "integer",
                         "example": 1
                     },
                     "name": {
-                        "description": "Full name of the establishment",
                         "type": "string",
-                        "example": "University of Antananarivo"
+                        "example": "Ecole Supérieure des Sciences Agronomiques"
                     },
                     "abbreviation": {
-                        "description": "Abbreviation/acronym of the establishment",
                         "type": "string",
-                        "example": "UA"
+                        "example": "ESSA"
+                    },
+                    "logo_url": {
+                        "type": "string",
+                        "example": "https://educ-map.mg/storage/logos/essa.png",
+                        "nullable": true
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "BP 175, 101 Antananarivo, Madagascar"
+                    },
+                    "region": {
+                        "type": "string",
+                        "example": "Analamanga"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": -18.916779
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 47.520526
                     },
                     "category": {
-                        "description": "Category information",
                         "properties": {
                             "id": {
                                 "type": "integer",
@@ -425,282 +1855,150 @@
                             }
                         },
                         "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "MapMarker": {
+                "title": "Map Marker",
+                "description": "Lightweight establishment data for map markers",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
                     },
-                    "location": {
-                        "description": "Location information",
-                        "properties": {
-                            "region": {
-                                "type": "string",
-                                "example": "Analamanga"
-                            },
-                            "city": {
-                                "type": "string",
-                                "example": "Antananarivo"
-                            },
-                            "latitude": {
-                                "type": "number",
-                                "format": "float",
-                                "example": -18.9167
-                            },
-                            "longitude": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 47.5167
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "logo_url": {
-                        "description": "URL to the establishment's logo",
+                    "name": {
                         "type": "string",
-                        "format": "url",
-                        "example": "http://example.com/ua-logo.png"
+                        "example": "Ecole Supérieure des Sciences Agronomiques"
+                    },
+                    "abbreviation": {
+                        "type": "string",
+                        "example": "ESSA"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": -18.916779
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 47.520526
+                    },
+                    "category_name": {
+                        "type": "string",
+                        "example": "Public University"
                     }
                 },
                 "type": "object"
             },
             "PaginationLinks": {
                 "title": "Pagination Links",
-                "description": "Links for paginated responses",
+                "description": "Pagination links for API responses",
                 "properties": {
                     "first": {
-                        "description": "URL to the first page",
                         "type": "string",
-                        "format": "url",
-                        "example": "http://localhost:8000/api/establishments?page=1"
+                        "example": "https://example.com/api/establishments?page=1"
                     },
                     "last": {
-                        "description": "URL to the last page",
                         "type": "string",
-                        "format": "url",
-                        "example": "http://localhost:8000/api/establishments?page=10"
+                        "example": "https://example.com/api/establishments?page=5"
                     },
                     "prev": {
-                        "description": "URL to the previous page (null if on first page)",
                         "type": "string",
-                        "format": "url",
                         "example": null,
                         "nullable": true
                     },
                     "next": {
-                        "description": "URL to the next page (null if on last page)",
                         "type": "string",
-                        "format": "url",
-                        "example": "http://localhost:8000/api/establishments?page=2",
-                        "nullable": true
+                        "example": "https://example.com/api/establishments?page=2"
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationMeta": {
+                "title": "Pagination Meta",
+                "description": "Pagination metadata for API responses",
+                "properties": {
+                    "current_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "from": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "last_page": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "url": {
+                                    "type": "string",
+                                    "nullable": true
+                                },
+                                "label": {
+                                    "type": "string"
+                                },
+                                "active": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "path": {
+                        "type": "string",
+                        "example": "https://example.com/api/establishments"
+                    },
+                    "per_page": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "to": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "total": {
+                        "type": "integer",
+                        "example": 75
                     }
                 },
                 "type": "object"
             },
             "SearchHistory": {
                 "title": "Search History",
-                "description": "User saved search history",
+                "description": "User search history entry",
                 "properties": {
                     "id": {
-                        "description": "Search history ID",
                         "type": "integer",
                         "example": 1
                     },
                     "user_id": {
-                        "description": "User ID who saved this search",
                         "type": "integer",
                         "example": 1
                     },
                     "search_query_text": {
-                        "description": "Text of the search query",
                         "type": "string",
-                        "example": "computer science"
+                        "example": "Computer Science Programs"
                     },
                     "search_filters": {
-                        "description": "JSON object of search filters",
                         "type": "object",
                         "example": {
                             "region": "Analamanga",
-                            "category": "Public University",
                             "domain": "Computer Science"
                         }
                     },
                     "created_at": {
-                        "description": "Creation timestamp",
                         "type": "string",
-                        "format": "date-time",
-                        "example": "2023-05-02T12:34:56Z"
+                        "format": "date-time"
                     },
                     "updated_at": {
-                        "description": "Last update timestamp",
                         "type": "string",
-                        "format": "date-time",
-                        "example": "2023-05-02T12:34:56Z"
-                    }
-                },
-                "type": "object"
-            },
-            "StoreEstablishmentRequest": {
-                "title": "Store Establishment Request",
-                "description": "Request for creating a new establishment",
-                "required": [
-                    "name",
-                    "category_id"
-                ],
-                "properties": {
-                    "name": {
-                        "description": "Full name of the establishment",
-                        "type": "string",
-                        "example": "New University"
-                    },
-                    "abbreviation": {
-                        "description": "Abbreviation/acronym of the establishment",
-                        "type": "string",
-                        "example": "NU"
-                    },
-                    "description": {
-                        "description": "Detailed description of the establishment",
-                        "type": "string",
-                        "example": "A new university in Madagascar"
-                    },
-                    "category_id": {
-                        "description": "Category ID",
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "address": {
-                        "description": "Physical address",
-                        "type": "string",
-                        "example": "123 University Street, Antananarivo"
-                    },
-                    "region": {
-                        "description": "Region name",
-                        "type": "string",
-                        "example": "Analamanga"
-                    },
-                    "city": {
-                        "description": "City name",
-                        "type": "string",
-                        "example": "Antananarivo"
-                    },
-                    "latitude": {
-                        "description": "Geographical latitude",
-                        "type": "number",
-                        "format": "float",
-                        "example": -18.9167
-                    },
-                    "longitude": {
-                        "description": "Geographical longitude",
-                        "type": "number",
-                        "format": "float",
-                        "example": 47.5167
-                    },
-                    "phone": {
-                        "description": "Contact phone number",
-                        "type": "string",
-                        "example": "+261 20 22 123 45"
-                    },
-                    "email": {
-                        "description": "Contact email address",
-                        "type": "string",
-                        "format": "email",
-                        "example": "contact@newuniversity.mg"
-                    },
-                    "website": {
-                        "description": "Website URL",
-                        "type": "string",
-                        "format": "url",
-                        "example": "http://www.newuniversity.mg"
-                    },
-                    "logo_url": {
-                        "description": "URL to the establishment's logo",
-                        "type": "string",
-                        "format": "url",
-                        "example": "http://example.com/logo.png"
-                    },
-                    "student_count": {
-                        "description": "Number of students",
-                        "type": "integer",
-                        "example": 5000
-                    },
-                    "success_rate": {
-                        "description": "Success rate percentage",
-                        "type": "number",
-                        "format": "float",
-                        "example": 80.5
-                    },
-                    "professional_insertion_rate": {
-                        "description": "Professional insertion rate percentage",
-                        "type": "number",
-                        "format": "float",
-                        "example": 75
-                    },
-                    "first_habilitation_year": {
-                        "description": "Year of first habilitation",
-                        "type": "integer",
-                        "example": 2020
-                    }
-                },
-                "type": "object"
-            },
-            "UpdateEstablishmentRequest": {
-                "title": "Update Establishment Request",
-                "description": "Request for updating an existing establishment",
-                "properties": {
-                    "name": {
-                        "description": "Full name of the establishment",
-                        "type": "string",
-                        "example": "Updated University Name"
-                    },
-                    "abbreviation": {
-                        "description": "Abbreviation/acronym of the establishment",
-                        "type": "string",
-                        "example": "UUN"
-                    },
-                    "description": {
-                        "description": "Detailed description of the establishment",
-                        "type": "string",
-                        "example": "Updated description for the university"
-                    },
-                    "address": {
-                        "description": "Physical address",
-                        "type": "string",
-                        "example": "456 New University Road, Antananarivo"
-                    },
-                    "phone": {
-                        "description": "Contact phone number",
-                        "type": "string",
-                        "example": "+261 20 22 987 65"
-                    },
-                    "email": {
-                        "description": "Contact email address",
-                        "type": "string",
-                        "format": "email",
-                        "example": "updated-contact@university.mg"
-                    },
-                    "website": {
-                        "description": "Website URL",
-                        "type": "string",
-                        "format": "url",
-                        "example": "http://www.updated-university.mg"
-                    },
-                    "logo_url": {
-                        "description": "URL to the establishment's logo",
-                        "type": "string",
-                        "format": "url",
-                        "example": "http://example.com/updated-logo.png"
-                    },
-                    "student_count": {
-                        "description": "Number of students",
-                        "type": "integer",
-                        "example": 6000
-                    },
-                    "success_rate": {
-                        "description": "Success rate percentage",
-                        "type": "number",
-                        "format": "float",
-                        "example": 82.5
-                    },
-                    "professional_insertion_rate": {
-                        "description": "Professional insertion rate percentage",
-                        "type": "number",
-                        "format": "float",
-                        "example": 78
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -710,51 +2008,39 @@
                 "description": "User model",
                 "properties": {
                     "id": {
-                        "description": "User ID",
                         "type": "integer",
                         "example": 1
                     },
                     "name": {
-                        "description": "User's name",
                         "type": "string",
                         "example": "John Doe"
                     },
                     "email": {
-                        "description": "User's email address",
                         "type": "string",
                         "format": "email",
                         "example": "john@example.com"
                     },
                     "roles": {
-                        "description": "User roles",
                         "type": "array",
                         "items": {
-                            "type": "string",
-                            "enum": [
-                                "ROLE_USER",
-                                "ROLE_ADMIN",
-                                "ROLE_ESTABLISHMENT"
-                            ],
-                            "example": "ROLE_USER"
-                        }
+                            "type": "string"
+                        },
+                        "example": [
+                            "ROLE_USER"
+                        ]
                     },
-                    "associated_establishment": {
-                        "description": "ID of associated establishment (for ROLE_ESTABLISHMENT users)",
+                    "associated_establishment_id": {
                         "type": "integer",
                         "example": null,
                         "nullable": true
                     },
                     "created_at": {
-                        "description": "Creation timestamp",
                         "type": "string",
-                        "format": "date-time",
-                        "example": "2023-05-02T12:34:56Z"
+                        "format": "date-time"
                     },
                     "updated_at": {
-                        "description": "Last update timestamp",
                         "type": "string",
-                        "format": "date-time",
-                        "example": "2023-05-02T12:34:56Z"
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -763,10 +2049,33 @@
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
+                "scheme": "bearer",
                 "bearerFormat": "JWT",
-                "scheme": "bearer"
+                "description": "Enter token in format (Bearer <token>)"
             }
         }
     },
-    "tags": []
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Endpoints for user authentication and profile management"
+        },
+        {
+            "name": "Establishments",
+            "description": "Endpoints for accessing and managing establishment data"
+        },
+        {
+            "name": "Map & Comparison",
+            "description": "Endpoints for map markers and establishment comparison"
+        },
+        {
+            "name": "Search History",
+            "description": "Endpoints for managing user search history"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ]
 }

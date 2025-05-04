@@ -14,6 +14,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * @OA\Tag(
+ *     name="Establishments",
+ *     description="Endpoints for accessing and managing establishment data"
+ * )
+ */
 class EstablishmentController extends Controller
 {
     /**
@@ -21,6 +27,143 @@ class EstablishmentController extends Controller
      *
      * @param IndexEstablishmentRequest $request
      * @return AnonymousResourceCollection
+     *
+     * @OA\Get(
+     *     path="/api/establishments",
+     *     summary="Get a paginated list of establishments with optional filtering and sorting",
+     *     tags={"Establishments"},
+     *     @OA\Parameter(
+     *         name="region",
+     *         in="query",
+     *         description="Filter by region name (exact match)",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Filter by establishment name (partial match)",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="abbreviation",
+     *         in="query",
+     *         description="Filter by abbreviation (partial match)",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="category",
+     *         in="query",
+     *         description="Filter by category name (exact match)",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="domain",
+     *         in="query",
+     *         description="Filter by domain name (partial match)",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="label",
+     *         in="query",
+     *         description="Filter by label name (exact match)",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="reference_start_date",
+     *         in="query",
+     *         description="Filter by references with date after this value (YYYY-MM-DD)",
+     *         required=false,
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="reference_end_date",
+     *         in="query",
+     *         description="Filter by references with date before this value (YYYY-MM-DD)",
+     *         required=false,
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="sort_by",
+     *         in="query",
+     *         description="Field to sort by (name, student_count, reference_date)",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"name", "student_count", "reference_date"}, default="name")
+     *     ),
+     *     @OA\Parameter(
+     *         name="sort_direction",
+     *         in="query",
+     *         description="Sort direction (asc or desc)",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"asc", "desc"}, default="asc")
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1, minimum=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15, minimum=1, maximum=100)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of establishments",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Ecole Supérieure des Sciences Agronomiques"),
+     *                     @OA\Property(property="abbreviation", type="string", example="ESSA"),
+     *                     @OA\Property(property="logo_url", type="string", nullable=true),
+     *                     @OA\Property(property="address", type="string"),
+     *                     @OA\Property(property="region", type="string"),
+     *                     @OA\Property(property="latitude", type="number", format="float"),
+     *                     @OA\Property(property="longitude", type="number", format="float"),
+     *                     @OA\Property(property="category", type="object",
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="name", type="string")
+     *                     )
+     *                 )
+     *             ),
+     *             @OA\Property(property="links", type="object",
+     *                 @OA\Property(property="first", type="string"),
+     *                 @OA\Property(property="last", type="string"),
+     *                 @OA\Property(property="prev", type="string", nullable=true),
+     *                 @OA\Property(property="next", type="string", nullable=true)
+     *             ),
+     *             @OA\Property(property="meta", type="object",
+     *                 @OA\Property(property="current_page", type="integer"),
+     *                 @OA\Property(property="from", type="integer"),
+     *                 @OA\Property(property="last_page", type="integer"),
+     *                 @OA\Property(property="path", type="string"),
+     *                 @OA\Property(property="per_page", type="integer"),
+     *                 @OA\Property(property="to", type="integer"),
+     *                 @OA\Property(property="total", type="integer"),
+     *                 @OA\Property(property="links", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="url", type="string", nullable=true),
+     *                         @OA\Property(property="label", type="string"),
+     *                         @OA\Property(property="active", type="boolean")
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index(IndexEstablishmentRequest $request): AnonymousResourceCollection
     {
@@ -75,6 +218,44 @@ class EstablishmentController extends Controller
      *
      * @param StoreEstablishmentRequest $request
      * @return EstablishmentDetailResource
+     *
+     * @OA\Post(
+     *     path="/api/establishments",
+     *     summary="Create a new establishment",
+     *     tags={"Establishments"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Establishment data",
+     *         @OA\JsonContent(
+     *             required={"name", "category_id"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="abbreviation", type="string"),
+     *             @OA\Property(property="category_id", type="integer"),
+     *             @OA\Property(property="address", type="string"),
+     *             @OA\Property(property="region", type="string"),
+     *             @OA\Property(property="latitude", type="number", format="float"),
+     *             @OA\Property(property="longitude", type="number", format="float"),
+     *             @OA\Property(property="website", type="string"),
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="phone", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="student_count", type="integer"),
+     *             @OA\Property(property="success_rate", type="number", format="float"),
+     *             @OA\Property(property="professional_insertion_rate", type="number", format="float"),
+     *             @OA\Property(property="first_habilitation_year", type="integer"),
+     *             @OA\Property(property="labels", type="array", @OA\Items(type="integer"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Establishment created successfully",
+     *         @OA\JsonContent(type="object")
+     *     ),
+     *     @OA\Response(response=400, description="Invalid input data"),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Not found")
+     * )
      */
     public function store(StoreEstablishmentRequest $request): EstablishmentDetailResource
     {
@@ -95,6 +276,51 @@ class EstablishmentController extends Controller
      *
      * @param Establishment $establishment
      * @return EstablishmentDetailResource
+     *
+     * @OA\Get(
+     *     path="/api/establishments/{id}",
+     *     summary="Get establishment details",
+     *     tags={"Establishments"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the establishment to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Establishment details",
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="abbreviation", type="string"),
+     *                 @OA\Property(property="logo_url", type="string", nullable=true),
+     *                 @OA\Property(property="address", type="string"),
+     *                 @OA\Property(property="region", type="string"),
+     *                 @OA\Property(property="latitude", type="number", format="float"),
+     *                 @OA\Property(property="longitude", type="number", format="float"),
+     *                 @OA\Property(property="website", type="string", nullable=true),
+     *                 @OA\Property(property="email", type="string", nullable=true),
+     *                 @OA\Property(property="phone", type="string", nullable=true),
+     *                 @OA\Property(property="description", type="string", nullable=true),
+     *                 @OA\Property(property="status", type="string"),
+     *                 @OA\Property(property="student_count", type="integer", nullable=true),
+     *                 @OA\Property(property="success_rate", type="number", format="float", nullable=true),
+     *                 @OA\Property(property="professional_insertion_rate", type="number", format="float", nullable=true),
+     *                 @OA\Property(property="first_habilitation_year", type="integer", nullable=true),
+     *                 @OA\Property(property="category", type="object"),
+     *                 @OA\Property(property="departments", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="labels", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="program_offerings", type="array", @OA\Items(type="object"))
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Establishment not found")
+     * )
      */
     public function show(Establishment $establishment): EstablishmentDetailResource
     {
@@ -119,6 +345,49 @@ class EstablishmentController extends Controller
      * @param UpdateEstablishmentRequest $request
      * @param Establishment $establishment
      * @return EstablishmentDetailResource
+     *
+     * @OA\Put(
+     *     path="/api/establishments/{id}",
+     *     summary="Update an existing establishment",
+     *     tags={"Establishments"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the establishment to update",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="abbreviation", type="string"),
+     *             @OA\Property(property="category_id", type="integer"),
+     *             @OA\Property(property="address", type="string"),
+     *             @OA\Property(property="region", type="string"),
+     *             @OA\Property(property="latitude", type="number", format="float"),
+     *             @OA\Property(property="longitude", type="number", format="float"),
+     *             @OA\Property(property="website", type="string"),
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="phone", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="student_count", type="integer"),
+     *             @OA\Property(property="success_rate", type="number", format="float"),
+     *             @OA\Property(property="professional_insertion_rate", type="number", format="float"),
+     *             @OA\Property(property="first_habilitation_year", type="integer"),
+     *             @OA\Property(property="labels", type="array", @OA\Items(type="integer"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Establishment updated successfully",
+     *         @OA\JsonContent(type="object")
+     *     ),
+     *     @OA\Response(response=400, description="Invalid input data"),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Establishment not found")
+     * )
      */
     public function update(UpdateEstablishmentRequest $request, Establishment $establishment): EstablishmentDetailResource
     {
@@ -139,6 +408,30 @@ class EstablishmentController extends Controller
      *
      * @param Establishment $establishment
      * @return JsonResponse
+     *
+     * @OA\Delete(
+     *     path="/api/establishments/{id}",
+     *     summary="Delete an establishment",
+     *     tags={"Establishments"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the establishment to delete",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Establishment deleted successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden"),
+     *     @OA\Response(response=404, description="Establishment not found")
+     * )
      */
     public function destroy(Establishment $establishment): JsonResponse
     {
