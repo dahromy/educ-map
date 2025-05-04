@@ -1,0 +1,772 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Educ-Map API Documentation",
+        "description": "API documentation for Educ-Map - Higher Education Institutions Directory in Madagascar",
+        "contact": {
+            "name": "Educ-Map Support Team",
+            "email": "contact@educ-map.mg"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Educ-Map API Server"
+        }
+    ],
+    "paths": {
+        "/api": {}
+    },
+    "components": {
+        "schemas": {
+            "EstablishmentComparisonResource": {
+                "title": "Establishment Comparison Resource",
+                "description": "Resource for comparing establishments side by side",
+                "properties": {
+                    "id": {
+                        "description": "Establishment ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Full name of the establishment",
+                        "type": "string",
+                        "example": "University of Antananarivo"
+                    },
+                    "abbreviation": {
+                        "description": "Abbreviation/acronym of the establishment",
+                        "type": "string",
+                        "example": "UA"
+                    },
+                    "indicators": {
+                        "description": "Performance indicators",
+                        "properties": {
+                            "student_count": {
+                                "type": "integer",
+                                "example": 30000
+                            },
+                            "success_rate": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 75.5
+                            },
+                            "professional_insertion_rate": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 68
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "program_info": {
+                        "description": "Program information",
+                        "properties": {
+                            "tuition_fees": {
+                                "type": "string",
+                                "example": "Average: 2,000,000 Ar per year"
+                            },
+                            "duration": {
+                                "type": "string",
+                                "example": "Range: 3-5 years"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "EstablishmentDetailResource": {
+                "title": "Establishment Detail Resource",
+                "description": "Detailed establishment resource for single view",
+                "properties": {
+                    "id": {
+                        "description": "Establishment ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Full name of the establishment",
+                        "type": "string",
+                        "example": "University of Antananarivo"
+                    },
+                    "abbreviation": {
+                        "description": "Abbreviation/acronym of the establishment",
+                        "type": "string",
+                        "example": "UA"
+                    },
+                    "description": {
+                        "description": "Detailed description of the establishment",
+                        "type": "string",
+                        "example": "The largest and oldest university in Madagascar"
+                    },
+                    "category": {
+                        "description": "Category information",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Public University"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "location": {
+                        "description": "Location information",
+                        "properties": {
+                            "address": {
+                                "type": "string",
+                                "example": "Ankatso, 101 Antananarivo"
+                            },
+                            "region": {
+                                "type": "string",
+                                "example": "Analamanga"
+                            },
+                            "city": {
+                                "type": "string",
+                                "example": "Antananarivo"
+                            },
+                            "latitude": {
+                                "type": "number",
+                                "format": "float",
+                                "example": -18.9167
+                            },
+                            "longitude": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 47.5167
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "contact": {
+                        "description": "Contact information",
+                        "properties": {
+                            "phone": {
+                                "type": "string",
+                                "example": "+261 20 22 326 39"
+                            },
+                            "email": {
+                                "type": "string",
+                                "example": "contact@univ-antananarivo.mg"
+                            },
+                            "website": {
+                                "type": "string",
+                                "example": "http://www.univ-antananarivo.mg"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "indicators": {
+                        "description": "Performance indicators",
+                        "properties": {
+                            "student_count": {
+                                "type": "integer",
+                                "example": 30000
+                            },
+                            "success_rate": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 75.5
+                            },
+                            "professional_insertion_rate": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 68
+                            },
+                            "first_habilitation_year": {
+                                "type": "integer",
+                                "example": 1961
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "logo_url": {
+                        "description": "URL to the establishment's logo",
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://example.com/ua-logo.png"
+                    },
+                    "departments": {
+                        "description": "List of departments in this establishment",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "example": "Computer Science Department"
+                                },
+                                "abbreviation": {
+                                    "type": "string",
+                                    "example": "CS"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "labels": {
+                        "description": "List of labels for this establishment",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "name": {
+                                    "type": "string",
+                                    "example": "Excellence"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "program_offerings": {
+                        "description": "Programs offered by this establishment",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "domain": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Computer Science"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "grade": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Licence"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "mention": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Information Systems"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "tuition_fees_info": {
+                                    "type": "string",
+                                    "example": "2,000,000 Ar per year"
+                                },
+                                "program_duration_info": {
+                                    "type": "string",
+                                    "example": "3 years"
+                                },
+                                "accreditations": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "reference_type": {
+                                                "type": "string",
+                                                "example": "Initial"
+                                            },
+                                            "accreditation_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2020-05-15"
+                                            },
+                                            "is_recent": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
+                                            "reference": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Decree No. 2020-123"
+                                                    },
+                                                    "main_date": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2020-05-15"
+                                                    },
+                                                    "document_url": {
+                                                        "type": "string",
+                                                        "example": "http://example.com/decree-2020-123.pdf"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-05-02T12:34:56Z"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-05-02T12:34:56Z"
+                    }
+                },
+                "type": "object"
+            },
+            "EstablishmentMapResource": {
+                "title": "Establishment Map Resource",
+                "description": "Lightweight establishment resource for map markers",
+                "properties": {
+                    "id": {
+                        "description": "Establishment ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Full name of the establishment",
+                        "type": "string",
+                        "example": "University of Antananarivo"
+                    },
+                    "abbreviation": {
+                        "description": "Abbreviation/acronym of the establishment",
+                        "type": "string",
+                        "example": "UA"
+                    },
+                    "latitude": {
+                        "description": "Geographical latitude",
+                        "type": "number",
+                        "format": "float",
+                        "example": -18.9167
+                    },
+                    "longitude": {
+                        "description": "Geographical longitude",
+                        "type": "number",
+                        "format": "float",
+                        "example": 47.5167
+                    },
+                    "category_name": {
+                        "description": "Category name for display on map",
+                        "type": "string",
+                        "example": "Public University"
+                    }
+                },
+                "type": "object"
+            },
+            "EstablishmentResource": {
+                "title": "Establishment Resource",
+                "description": "Establishment resource for list views",
+                "properties": {
+                    "id": {
+                        "description": "Establishment ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Full name of the establishment",
+                        "type": "string",
+                        "example": "University of Antananarivo"
+                    },
+                    "abbreviation": {
+                        "description": "Abbreviation/acronym of the establishment",
+                        "type": "string",
+                        "example": "UA"
+                    },
+                    "category": {
+                        "description": "Category information",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Public University"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "location": {
+                        "description": "Location information",
+                        "properties": {
+                            "region": {
+                                "type": "string",
+                                "example": "Analamanga"
+                            },
+                            "city": {
+                                "type": "string",
+                                "example": "Antananarivo"
+                            },
+                            "latitude": {
+                                "type": "number",
+                                "format": "float",
+                                "example": -18.9167
+                            },
+                            "longitude": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 47.5167
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "logo_url": {
+                        "description": "URL to the establishment's logo",
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://example.com/ua-logo.png"
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationLinks": {
+                "title": "Pagination Links",
+                "description": "Links for paginated responses",
+                "properties": {
+                    "first": {
+                        "description": "URL to the first page",
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://localhost:8000/api/establishments?page=1"
+                    },
+                    "last": {
+                        "description": "URL to the last page",
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://localhost:8000/api/establishments?page=10"
+                    },
+                    "prev": {
+                        "description": "URL to the previous page (null if on first page)",
+                        "type": "string",
+                        "format": "url",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "next": {
+                        "description": "URL to the next page (null if on last page)",
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://localhost:8000/api/establishments?page=2",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "SearchHistory": {
+                "title": "Search History",
+                "description": "User saved search history",
+                "properties": {
+                    "id": {
+                        "description": "Search history ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "description": "User ID who saved this search",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "search_query_text": {
+                        "description": "Text of the search query",
+                        "type": "string",
+                        "example": "computer science"
+                    },
+                    "search_filters": {
+                        "description": "JSON object of search filters",
+                        "type": "object",
+                        "example": {
+                            "region": "Analamanga",
+                            "category": "Public University",
+                            "domain": "Computer Science"
+                        }
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-05-02T12:34:56Z"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-05-02T12:34:56Z"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreEstablishmentRequest": {
+                "title": "Store Establishment Request",
+                "description": "Request for creating a new establishment",
+                "required": [
+                    "name",
+                    "category_id"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Full name of the establishment",
+                        "type": "string",
+                        "example": "New University"
+                    },
+                    "abbreviation": {
+                        "description": "Abbreviation/acronym of the establishment",
+                        "type": "string",
+                        "example": "NU"
+                    },
+                    "description": {
+                        "description": "Detailed description of the establishment",
+                        "type": "string",
+                        "example": "A new university in Madagascar"
+                    },
+                    "category_id": {
+                        "description": "Category ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "address": {
+                        "description": "Physical address",
+                        "type": "string",
+                        "example": "123 University Street, Antananarivo"
+                    },
+                    "region": {
+                        "description": "Region name",
+                        "type": "string",
+                        "example": "Analamanga"
+                    },
+                    "city": {
+                        "description": "City name",
+                        "type": "string",
+                        "example": "Antananarivo"
+                    },
+                    "latitude": {
+                        "description": "Geographical latitude",
+                        "type": "number",
+                        "format": "float",
+                        "example": -18.9167
+                    },
+                    "longitude": {
+                        "description": "Geographical longitude",
+                        "type": "number",
+                        "format": "float",
+                        "example": 47.5167
+                    },
+                    "phone": {
+                        "description": "Contact phone number",
+                        "type": "string",
+                        "example": "+261 20 22 123 45"
+                    },
+                    "email": {
+                        "description": "Contact email address",
+                        "type": "string",
+                        "format": "email",
+                        "example": "contact@newuniversity.mg"
+                    },
+                    "website": {
+                        "description": "Website URL",
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://www.newuniversity.mg"
+                    },
+                    "logo_url": {
+                        "description": "URL to the establishment's logo",
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://example.com/logo.png"
+                    },
+                    "student_count": {
+                        "description": "Number of students",
+                        "type": "integer",
+                        "example": 5000
+                    },
+                    "success_rate": {
+                        "description": "Success rate percentage",
+                        "type": "number",
+                        "format": "float",
+                        "example": 80.5
+                    },
+                    "professional_insertion_rate": {
+                        "description": "Professional insertion rate percentage",
+                        "type": "number",
+                        "format": "float",
+                        "example": 75
+                    },
+                    "first_habilitation_year": {
+                        "description": "Year of first habilitation",
+                        "type": "integer",
+                        "example": 2020
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateEstablishmentRequest": {
+                "title": "Update Establishment Request",
+                "description": "Request for updating an existing establishment",
+                "properties": {
+                    "name": {
+                        "description": "Full name of the establishment",
+                        "type": "string",
+                        "example": "Updated University Name"
+                    },
+                    "abbreviation": {
+                        "description": "Abbreviation/acronym of the establishment",
+                        "type": "string",
+                        "example": "UUN"
+                    },
+                    "description": {
+                        "description": "Detailed description of the establishment",
+                        "type": "string",
+                        "example": "Updated description for the university"
+                    },
+                    "address": {
+                        "description": "Physical address",
+                        "type": "string",
+                        "example": "456 New University Road, Antananarivo"
+                    },
+                    "phone": {
+                        "description": "Contact phone number",
+                        "type": "string",
+                        "example": "+261 20 22 987 65"
+                    },
+                    "email": {
+                        "description": "Contact email address",
+                        "type": "string",
+                        "format": "email",
+                        "example": "updated-contact@university.mg"
+                    },
+                    "website": {
+                        "description": "Website URL",
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://www.updated-university.mg"
+                    },
+                    "logo_url": {
+                        "description": "URL to the establishment's logo",
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://example.com/updated-logo.png"
+                    },
+                    "student_count": {
+                        "description": "Number of students",
+                        "type": "integer",
+                        "example": 6000
+                    },
+                    "success_rate": {
+                        "description": "Success rate percentage",
+                        "type": "number",
+                        "format": "float",
+                        "example": 82.5
+                    },
+                    "professional_insertion_rate": {
+                        "description": "Professional insertion rate percentage",
+                        "type": "number",
+                        "format": "float",
+                        "example": 78
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "description": "User ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "User's name",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "roles": {
+                        "description": "User roles",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "ROLE_USER",
+                                "ROLE_ADMIN",
+                                "ROLE_ESTABLISHMENT"
+                            ],
+                            "example": "ROLE_USER"
+                        }
+                    },
+                    "associated_establishment": {
+                        "description": "ID of associated establishment (for ROLE_ESTABLISHMENT users)",
+                        "type": "integer",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-05-02T12:34:56Z"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-05-02T12:34:56Z"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": []
+}

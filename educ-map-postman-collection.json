@@ -1,0 +1,497 @@
+{
+    "info": {
+        "name": "Educ-Map API Collection",
+        "description": "A collection of requests for the Educ-Map API - Higher Education Institutions Directory in Madagascar",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "description": "Endpoints for user authentication and profile management",
+            "item": [
+                {
+                    "name": "Register User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/register",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["register"]
+                        },
+                        "description": "Create a new user account"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"admin@educ-map.mg\",\n    \"password\": \"password\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/login",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["login"]
+                        },
+                        "description": "Login to get an authentication token"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/me",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["me"]
+                        },
+                        "description": "Get the currently authenticated user's profile"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update User Profile",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Updated Name\",\n    \"email\": \"updated@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/me",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["me"]
+                        },
+                        "description": "Update the currently authenticated user's profile"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/logout",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["logout"]
+                        },
+                        "description": "Invalidate the current authentication token"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Establishments",
+            "description": "Endpoints for accessing and managing establishment data",
+            "item": [
+                {
+                    "name": "List Establishments",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/establishments?region=&category=&name=&abbreviation=&domain=&label=&sort_by=name&sort_direction=asc&page=1&per_page=15",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["establishments"],
+                            "query": [
+                                {
+                                    "key": "region",
+                                    "value": "",
+                                    "description": "Filter by region"
+                                },
+                                {
+                                    "key": "category",
+                                    "value": "",
+                                    "description": "Filter by category name"
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "",
+                                    "description": "Filter by establishment name (partial match)"
+                                },
+                                {
+                                    "key": "abbreviation",
+                                    "value": "",
+                                    "description": "Filter by establishment abbreviation (partial match)"
+                                },
+                                {
+                                    "key": "domain",
+                                    "value": "",
+                                    "description": "Filter by domain name (partial match)"
+                                },
+                                {
+                                    "key": "label",
+                                    "value": "",
+                                    "description": "Filter by label name"
+                                },
+                                {
+                                    "key": "sort_by",
+                                    "value": "name",
+                                    "description": "Field to sort by (name, student_count, reference_date)"
+                                },
+                                {
+                                    "key": "sort_direction",
+                                    "value": "asc",
+                                    "description": "Sort direction (asc or desc)"
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number"
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "15",
+                                    "description": "Items per page"
+                                }
+                            ]
+                        },
+                        "description": "Get a paginated list of establishments with optional filtering and sorting"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Establishment Details",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/establishments/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["establishments", "1"]
+                        },
+                        "description": "Get detailed information for a specific establishment"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Recent Establishments",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/establishments/recent",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["establishments", "recent"]
+                        },
+                        "description": "Get recently added establishments or those with recent accreditations"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Establishment (Admin)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"New Test University\",\n    \"abbreviation\": \"NTU\",\n    \"description\": \"A test university for API documentation\",\n    \"category_id\": 1,\n    \"region\": \"Analamanga\",\n    \"city\": \"Antananarivo\",\n    \"address\": \"123 Test Street\",\n    \"latitude\": -18.9167,\n    \"longitude\": 47.5167,\n    \"phone\": \"+261 20 22 123 45\",\n    \"email\": \"contact@testuniversity.mg\",\n    \"website\": \"http://www.testuniversity.mg\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/establishments",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["establishments"]
+                        },
+                        "description": "Create a new establishment (Admin access required)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Establishment",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Updated Test University\",\n    \"description\": \"An updated description for testing\",\n    \"phone\": \"+261 20 22 987 65\",\n    \"success_rate\": 82.5,\n    \"professional_insertion_rate\": 78.0\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/establishments/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["establishments", "1"]
+                        },
+                        "description": "Update an existing establishment (Admin or establishment owner access required)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Establishment (Admin)",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/establishments/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["establishments", "1"]
+                        },
+                        "description": "Delete an establishment (Admin access required)"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Map & Comparison",
+            "description": "Endpoints for map markers and establishment comparison",
+            "item": [
+                {
+                    "name": "Get Map Markers",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/map/markers",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["map", "markers"]
+                        },
+                        "description": "Get lightweight establishment data for map markers"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Compare Establishments",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/compare?ids[]=1&ids[]=2",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["compare"],
+                            "query": [
+                                {
+                                    "key": "ids[]",
+                                    "value": "1",
+                                    "description": "First establishment ID"
+                                },
+                                {
+                                    "key": "ids[]",
+                                    "value": "2",
+                                    "description": "Second establishment ID"
+                                }
+                            ]
+                        },
+                        "description": "Compare multiple establishments side by side"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Search History",
+            "description": "Endpoints for managing user search history",
+            "item": [
+                {
+                    "name": "Get User Search History",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/me/searches",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["me", "searches"]
+                        },
+                        "description": "Get the authenticated user's saved searches"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Save Search",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"search_query_text\": \"computer science\",\n    \"search_filters\": {\n        \"region\": \"Analamanga\",\n        \"category\": \"Public University\",\n        \"domain\": \"Computer Science\"\n    }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/me/searches",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["me", "searches"]
+                        },
+                        "description": "Save a search query and filters for the authenticated user"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Saved Search",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/me/searches/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["me", "searches", "1"]
+                        },
+                        "description": "Delete a saved search for the authenticated user"
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "https://educ-map.lndo.site/api",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "your-auth-token-here",
+            "type": "string"
+        }
+    ]
+}

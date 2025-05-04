@@ -17,10 +17,6 @@ services:
     build_as_root:
       - curl -sS https://getcomposer.org/installer | php
       - mv composer.phar /usr/local/bin/composer
-      - cd /tmp && laravel new temp-project --no-interaction
-      - rm -rf /tmp/temp-project/.git* || true
-      - if [ "$(ls -A /app)" = "" ]; then cp -a /tmp/temp-project/. /app/; fi
-      - rm -rf /tmp/temp-project
 
   database:
     type: postgres:14
@@ -33,11 +29,11 @@ tooling:
   psql:
     service: database
     cmd: psql -U postgres -h localhost
-  
+
   pgdump:
     service: database
     cmd: pg_dump -U postgres
-  
+
   artisan:
     service: appserver
     cmd: php artisan
