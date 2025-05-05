@@ -54,9 +54,9 @@ return new class extends Migration {
         // Create References (Accreditation Decree Details) Table
         Schema::create('references', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->date('main_date');
+            $table->text('title'); // Changed from string to text
+            $table->text('description')->nullable(); // Changed from string to text
+            $table->date('main_date')->nullable(); // Keep nullable
             $table->string('document_url')->nullable();
             $table->timestamps();
         });
@@ -132,14 +132,6 @@ return new class extends Migration {
             $table->string('reference_type')->nullable();
             $table->date('accreditation_date')->nullable();
             $table->boolean('is_recent')->default(false);
-            $table->timestamps();
-        });
-
-        // Create DoctoralSchoolAffiliations Table
-        Schema::create('doctoral_school_affiliations', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('doctoral_school_id')->constrained('establishments')->onDelete('cascade');
-            $table->string('affiliated_institution_name');
             $table->timestamps();
         });
 

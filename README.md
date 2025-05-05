@@ -364,6 +364,11 @@ lando artisan migrate:fresh --seed
 
 # Access PostgreSQL CLI
 lando psql
+
+# Import data from JSON source (ensure storage/app/data/data.json exists)
+lando artisan import:education-data-improved
+# Use --dry-run to simulate the import without changing the database
+lando artisan import:education-data-improved --dry-run
 ```
 
 ### 🐞 Debugging

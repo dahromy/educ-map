@@ -93,6 +93,14 @@ class Establishment extends Model
     }
 
     /**
+     * Get the doctoral school affiliations for the establishment.
+     */
+    public function doctoralAffiliations(): HasMany
+    {
+        return $this->hasMany(DoctoralSchoolAffiliation::class);
+    }
+
+    /**
      * Define search scope for filtering by region
      */
     public function scopeFilterByRegion($query, $region)
