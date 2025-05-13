@@ -185,7 +185,7 @@ return new class extends Migration {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn(['roles', 'associated_establishment']);
         });
-        Schema::dropIfExists('doctoral_school_affiliations');
+        Schema::dropIfExists('affiliations');
         Schema::dropIfExists('accreditations');
         Schema::dropIfExists('program_offerings');
         Schema::dropIfExists('departments');

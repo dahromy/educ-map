@@ -11,7 +11,7 @@
     },
     "servers": [
         {
-            "url": "https://educ-map.lndo.site",
+            "url": "http://localhost:8000",
             "description": "Educ-Map API Server"
         },
         {

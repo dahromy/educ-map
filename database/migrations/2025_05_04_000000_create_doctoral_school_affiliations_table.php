@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('doctoral_school_affiliations', function (Blueprint $table) {
+        Schema::create('affiliations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('establishment_id')->constrained()->onDelete('cascade');
             $table->string('institution_name');
@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->timestamps();
 
             // Unique constraint to prevent duplicate affiliations
-            $table->unique(['establishment_id', 'institution_name']);
+            // $table->unique(['establishment_id', 'institution_name']);
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctoral_school_affiliations');
+        Schema::dropIfExists('affiliations');
     }
 };
