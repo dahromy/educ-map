@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Accreditation;
 use App\Models\Category;
 use App\Models\Department;
-use App\Models\DoctoralSchoolAffiliation;
+use App\Models\Affiliation; // Changed from DoctoralSchoolAffiliation
 use App\Models\Domain;
 use App\Models\Establishment;
 use App\Models\Grade;
@@ -348,30 +348,40 @@ class ImportEducationDataImproved extends Command
      */
     private function processAffiliations(Establishment $establishment, array $affiliations)
     {
-        if (!class_exists(DoctoralSchoolAffiliation::class)) {
-            if (!$this->option('dry-run')) {
-                $this->warn("  - DoctoralSchoolAffiliation model not found. Skipping affiliations.");
-            }
+        if (!class_exists(Affiliation::class)) { 
+            $this->warn("Affiliation model not found. Skipping affiliation processing.");
             return;
         }
 
         foreach ($affiliations as $institutionName) {
-            if (empty($institutionName))
+            if (empty($institutionName) || !is_string($institutionName)) {
+                $this->warn("  - Skipping empty or invalid institution name for establishment: " . $establishment->name);
                 continue;
+            }
 
-            $affiliation = DoctoralSchoolAffiliation::firstOrNew([
-                'establishment_id' => $establishment->id,
-                'institution_name' => $institutionName
-            ]);
+            $normalizedInstitutionName = trim(strtoupper($institutionName)); // Normalize before checking/creating
 
-            $isNew = !$affiliation->exists;
-
-            if (!$this->option('dry-run') && $isNew) {
-                $affiliation->save();
-                $this->info("  - Created affiliation with: {$institutionName}");
-                $this->stats['affiliations']['created']++;
-            } elseif ($isNew) {
-                $this->stats['affiliations']['created']++;
+            if (!$this->option('dry-run')) {
+                $affiliation = Affiliation::firstOrCreate(
+                    [
+                        'establishment_id' => $establishment->id,
+                        'institution_name' => $normalizedInstitutionName
+                    ],
+                    [
+                        // 'description' => null // Optional: set a default description if needed
+                    ]
+                );
+                if ($affiliation->wasRecentlyCreated) {
+                    $this->stats['affiliations']['created']++;
+                    $this->info("    - Created affiliation with: {$normalizedInstitutionName} for {$establishment->name}");
+                } else {
+                    // Optionally, you could update existing affiliations if needed, or just skip
+                    // $this->info("    - Affiliation with: {$normalizedInstitutionName} already exists for {$establishment->name}");
+                }
+            } else {
+                // Simulate creation for dry run
+                $this->stats['affiliations']['created']++; // Count as if it would be created
+                $this->line("  [Dry Run] Would create affiliation with: {$normalizedInstitutionName} for {$establishment->name}");
             }
         }
     }

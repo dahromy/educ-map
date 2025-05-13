@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->timestamps();
 
             // Unique constraint to prevent duplicate affiliations
-            // $table->unique(['establishment_id', 'institution_name']);
+            $table->unique(['establishment_id', 'institution_name']);
         });
     }
 
