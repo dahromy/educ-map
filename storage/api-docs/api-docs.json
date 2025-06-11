@@ -11,7 +11,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000",
+            "url": "https://educ-map.lndo.site",
             "description": "Educ-Map API Server"
         },
         {
@@ -505,6 +505,342 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get a list of all categories",
+                "description": "Display a listing of the categories with filtering options.",
+                "operationId": "8e17a9627dbed245cf032f867569cf11",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by category name (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by (category_name, created_at)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "category_name",
+                            "enum": [
+                                "category_name",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "Sort direction (asc or desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15,
+                            "maximum": 100,
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CategoryResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "$ref": "#/components/schemas/PaginationLinks"
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Create a new category",
+                "description": "Store a newly created category in storage.",
+                "operationId": "2140f330d926c3e118cab9391dc4ff42",
+                "requestBody": {
+                    "description": "Category data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "category_name"
+                                ],
+                                "properties": {
+                                    "category_name": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Public University"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "State-funded universities",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Category created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CategoryDetailResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Get category details",
+                "description": "Display the specified category.",
+                "operationId": "6a038665b20191638e1608ea8897bf64",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "include_establishments",
+                        "in": "query",
+                        "description": "Include establishments count for this category",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CategoryDetailResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update an existing category",
+                "description": "Update the specified category in storage.",
+                "operationId": "e4e7aaba2eee4d7e813dea85bf3cf3ed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "category_name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CategoryDetailResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Delete a category",
+                "description": "Remove the specified category from storage.",
+                "operationId": "f365d407ea3098d6b545847b09322b13",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Category deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "409": {
+                        "description": "Conflict - Category has associated establishments"
                     }
                 },
                 "security": [
@@ -1363,6 +1699,239 @@
                 }
             }
         },
+        "/api/lists": {
+            "get": {
+                "tags": [
+                    "Lists"
+                ],
+                "summary": "Get information about all available list endpoints",
+                "description": "Get a summary of all available list endpoints.",
+                "operationId": "2329d602df0234ab8b79e2a3cf7c7cf4",
+                "responses": {
+                    "200": {
+                        "description": "Summary of available list endpoints",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "endpoints": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "categories"
+                                                            },
+                                                            "url": {
+                                                                "type": "string",
+                                                                "example": "/api/categories"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "Get list of educational institution categories"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/domains": {
+            "get": {
+                "tags": [
+                    "Lists"
+                ],
+                "summary": "Get a list of all domains",
+                "description": "Get all domains for filter dropdowns.",
+                "operationId": "439e1afc93d6dc807f095edec9e8c1e6",
+                "responses": {
+                    "200": {
+                        "description": "List of domains",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Computer Science"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Study of computers and computational systems",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/grades": {
+            "get": {
+                "tags": [
+                    "Lists"
+                ],
+                "summary": "Get a list of all grades",
+                "description": "Get all grades for filter dropdowns.",
+                "operationId": "271ceaa572a096d6eb3e20f238f52e54",
+                "responses": {
+                    "200": {
+                        "description": "List of grades",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Licence"
+                                                    },
+                                                    "level": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Bachelor's degree equivalent",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/mentions": {
+            "get": {
+                "tags": [
+                    "Lists"
+                ],
+                "summary": "Get a list of all mentions",
+                "description": "Get all mentions for filter dropdowns.",
+                "operationId": "1100cf39bf8a47c0ded3617252c6821e",
+                "responses": {
+                    "200": {
+                        "description": "List of mentions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Computer Science"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Study of algorithms and computational systems",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/labels": {
+            "get": {
+                "tags": [
+                    "Lists"
+                ],
+                "summary": "Get a list of all labels",
+                "description": "Get all labels for filter dropdowns.",
+                "operationId": "73766328d6e9365af8ce9c00cf93e827",
+                "responses": {
+                    "200": {
+                        "description": "List of labels",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Excellence"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Institution recognized for excellence",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/me/searches": {
             "get": {
                 "tags": [
@@ -1563,6 +2132,68 @@
     },
     "components": {
         "schemas": {
+            "CategoryDetailResource": {
+                "title": "Category Detail Resource",
+                "description": "Detailed category resource",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Public University"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "State-funded universities",
+                        "nullable": true
+                    },
+                    "establishments_count": {
+                        "description": "Number of establishments in this category (included when include_establishments=true)",
+                        "type": "integer",
+                        "example": 15,
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CategoryResource": {
+                "title": "Category Resource",
+                "description": "Category resource for list view",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Public University"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "State-funded universities",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
             "EstablishmentDetailResource": {
                 "title": "Establishment Detail Resource",
                 "description": "Detailed establishment resource",
@@ -2061,12 +2692,20 @@
             "description": "Endpoints for user authentication and profile management"
         },
         {
+            "name": "Categories",
+            "description": "Endpoints for accessing and managing educational institution categories"
+        },
+        {
             "name": "Establishments",
             "description": "Endpoints for accessing and managing establishment data"
         },
         {
             "name": "Map & Comparison",
             "description": "Endpoints for map markers and establishment comparison"
+        },
+        {
+            "name": "Lists",
+            "description": "Endpoints for accessing simple list data for filters and forms"
         },
         {
             "name": "Search History",

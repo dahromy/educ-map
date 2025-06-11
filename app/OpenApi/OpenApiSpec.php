@@ -30,8 +30,16 @@ namespace App\OpenApi;
  *     description="Endpoints for user authentication and profile management"
  * )
  * @OA\Tag(
+ *     name="Categories",
+ *     description="Endpoints for accessing and managing educational institution categories"
+ * )
+ * @OA\Tag(
  *     name="Establishments",
  *     description="Endpoints for accessing and managing establishment data"
+ * )
+ * @OA\Tag(
+ *     name="Lists",
+ *     description="Endpoints for accessing simple list data for filters and forms"
  * )
  * @OA\Tag(
  *     name="Map & Comparison",
