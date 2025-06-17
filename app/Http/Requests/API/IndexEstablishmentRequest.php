@@ -30,9 +30,13 @@ class IndexEstablishmentRequest extends FormRequest
             'label' => 'sometimes|string|max:100',
             'reference_start_date' => 'sometimes|date',
             'reference_end_date' => 'sometimes|date|after_or_equal:reference_start_date',
-            'sort_by' => 'sometimes|string|in:name,student_count,reference_date',
+            'sort_by' => 'sometimes|string|in:name,student_count,reference_date,success_rate,professional_insertion_rate,first_habilitation_year',
             'sort_direction' => 'sometimes|string|in:asc,desc',
             'per_page' => 'sometimes|integer|min:1|max:100',
+            'has_recent_accreditation' => 'sometimes|in:true,false,1,0',
+            'min_student_count' => 'sometimes|integer|min:0',
+            'max_student_count' => 'sometimes|integer|min:0',
+            'city' => 'sometimes|string|max:100',
         ];
     }
 }

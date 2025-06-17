@@ -97,7 +97,7 @@ class Establishment extends Model
      */
     public function doctoralAffiliations(): HasMany
     {
-        return $this->hasMany(DoctoralSchoolAffiliation::class);
+        return $this->hasMany(Affiliation::class);
     }
 
     /**
@@ -186,6 +186,50 @@ class Establishment extends Model
                     $query->where('main_date', '<=', $endDate);
                 }
             });
+        }
+        return $query;
+    }
+
+    /**
+     * Define search scope for filtering by city
+     */
+    public function scopeFilterByCity($query, $city)
+    {
+        if ($city) {
+            return $query->where('city', 'like', "%{$city}%");
+        }
+        return $query;
+    }
+
+    /**
+     * Define search scope for filtering by recent accreditation
+     */
+    public function scopeFilterByRecentAccreditation($query, $hasRecent)
+    {
+        if ($hasRecent !== null) {
+            if ($hasRecent) {
+                return $query->whereHas('programOfferings.accreditations', function ($query) {
+                    $query->where('is_recent', true);
+                });
+            } else {
+                return $query->whereDoesntHave('programOfferings.accreditations', function ($query) {
+                    $query->where('is_recent', true);
+                });
+            }
+        }
+        return $query;
+    }
+
+    /**
+     * Define search scope for filtering by student count range
+     */
+    public function scopeFilterByStudentCount($query, $minCount, $maxCount)
+    {
+        if ($minCount !== null) {
+            $query->where('student_count', '>=', $minCount);
+        }
+        if ($maxCount !== null) {
+            $query->where('student_count', '<=', $maxCount);
         }
         return $query;
     }

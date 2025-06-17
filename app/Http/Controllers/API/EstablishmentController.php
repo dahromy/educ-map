@@ -89,11 +89,43 @@ class EstablishmentController extends Controller
      *         @OA\Schema(type="string", format="date")
      *     ),
      *     @OA\Parameter(
+     *         name="city",
+     *         in="query",
+     *         description="Filter by city name (partial match)",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="has_recent_accreditation",
+     *         in="query",
+     *         description="Filter by establishments with recent accreditations",
+     *         required=false,
+     *         @OA\Schema(type="boolean")
+     *     ),
+     *     @OA\Parameter(
+     *         name="min_student_count",
+     *         in="query",
+     *         description="Filter by minimum student count",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=0)
+     *     ),
+     *     @OA\Parameter(
+     *         name="max_student_count",
+     *         in="query",
+     *         description="Filter by maximum student count",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=0)
+     *     ),
+     *     @OA\Parameter(
      *         name="sort_by",
      *         in="query",
-     *         description="Field to sort by (name, student_count, reference_date)",
+     *         description="Field to sort by",
      *         required=false,
-     *         @OA\Schema(type="string", enum={"name", "student_count", "reference_date"}, default="name")
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"name", "student_count", "reference_date", "success_rate", "professional_insertion_rate", "first_habilitation_year"},
+     *             default="name"
+     *         )
      *     ),
      *     @OA\Parameter(
      *         name="sort_direction",
@@ -118,7 +150,7 @@ class EstablishmentController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="List of establishments",
+     *         description="List of establishments with enhanced details",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
@@ -128,15 +160,49 @@ class EstablishmentController extends Controller
      *                     @OA\Property(property="id", type="integer", example=1),
      *                     @OA\Property(property="name", type="string", example="Ecole Supérieure des Sciences Agronomiques"),
      *                     @OA\Property(property="abbreviation", type="string", example="ESSA"),
+     *                     @OA\Property(property="description", type="string", nullable=true, example="Leading agricultural sciences university in Madagascar"),
      *                     @OA\Property(property="logo_url", type="string", nullable=true),
-     *                     @OA\Property(property="address", type="string"),
-     *                     @OA\Property(property="region", type="string"),
-     *                     @OA\Property(property="latitude", type="number", format="float"),
-     *                     @OA\Property(property="longitude", type="number", format="float"),
      *                     @OA\Property(property="category", type="object",
      *                         @OA\Property(property="id", type="integer"),
      *                         @OA\Property(property="name", type="string")
-     *                     )
+     *                     ),
+     *                     @OA\Property(property="location", type="object",
+     *                         @OA\Property(property="address", type="string"),
+     *                         @OA\Property(property="region", type="string"),
+     *                         @OA\Property(property="city", type="string"),
+     *                         @OA\Property(property="latitude", type="number", format="float"),
+     *                         @OA\Property(property="longitude", type="number", format="float")
+     *                     ),
+     *                     @OA\Property(property="contact", type="object",
+     *                         @OA\Property(property="phone", type="string", nullable=true),
+     *                         @OA\Property(property="email", type="string", nullable=true),
+     *                         @OA\Property(property="website", type="string", nullable=true)
+     *                     ),
+     *                     @OA\Property(property="indicators", type="object",
+     *                         @OA\Property(property="student_count", type="integer", nullable=true),
+     *                         @OA\Property(property="success_rate", type="number", format="float", nullable=true),
+     *                         @OA\Property(property="professional_insertion_rate", type="number", format="float", nullable=true),
+     *                         @OA\Property(property="first_habilitation_year", type="integer", nullable=true)
+     *                     ),
+     *                     @OA\Property(property="labels", type="array",
+     *                         @OA\Items(type="object",
+     *                             @OA\Property(property="id", type="integer"),
+     *                             @OA\Property(property="name", type="string"),
+     *                             @OA\Property(property="description", type="string")
+     *                         )
+     *                     ),
+     *                     @OA\Property(property="programs_summary", type="object",
+     *                         @OA\Property(property="total_programs", type="integer"),
+     *                         @OA\Property(property="domains_count", type="integer"),
+     *                         @OA\Property(property="grades_offered", type="array", @OA\Items(type="string")),
+     *                         @OA\Property(property="departments_count", type="integer")
+     *                     ),
+     *                     @OA\Property(property="recent_accreditation", type="object",
+     *                         @OA\Property(property="has_recent", type="boolean"),
+     *                         @OA\Property(property="accreditation_date", type="string", format="date", nullable=true)
+     *                     ),
+     *                     @OA\Property(property="created_at", type="string", format="date-time"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time")
      *                 )
      *             ),
      *             @OA\Property(property="links", type="object",
@@ -167,11 +233,20 @@ class EstablishmentController extends Controller
      */
     public function index(IndexEstablishmentRequest $request): AnonymousResourceCollection
     {
-        $query = Establishment::with('category')
+        $query = Establishment::with([
+            'category',
+            'labels',
+            'departments',
+            'programOfferings' => function ($query) {
+                $query->with(['grade', 'accreditations']);
+            }
+        ])
             ->filterByRegion($request->region)
             ->filterByName($request->name)
             ->filterByAbbreviation($request->abbreviation)
-            ->filterByCategory($request->category);
+            ->filterByCategory($request->category)
+            ->filterByCity($request->city)
+            ->filterByStudentCount($request->min_student_count, $request->max_student_count);
 
         // Apply advanced filters if provided
         if ($request->has('domain')) {
@@ -189,11 +264,18 @@ class EstablishmentController extends Controller
             );
         }
 
+        if ($request->has('has_recent_accreditation')) {
+            $hasRecentAccreditation = filter_var($request->has_recent_accreditation, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            if ($hasRecentAccreditation !== null) {
+                $query->filterByRecentAccreditation($hasRecentAccreditation);
+            }
+        }
+
         // Apply sorting
         $sortBy = $request->input('sort_by', 'name');
         $sortDirection = $request->input('sort_direction', 'asc');
 
-        if ($sortBy === 'name' || $sortBy === 'student_count') {
+        if (in_array($sortBy, ['name', 'student_count', 'success_rate', 'professional_insertion_rate', 'first_habilitation_year'])) {
             $query->orderBy($sortBy, $sortDirection);
         } elseif ($sortBy === 'reference_date') {
             // Sort by most recent reference date requires a more complex query
