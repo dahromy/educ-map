@@ -17,6 +17,7 @@ class Label extends Model
      */
     protected $fillable = [
         'name',
+        'color',
         'description'
     ];
 

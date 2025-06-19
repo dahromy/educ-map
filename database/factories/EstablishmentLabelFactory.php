@@ -2,20 +2,22 @@
 
 namespace Database\Factories;
 
+use App\Models\Establishment;
+use App\Models\EstablishmentLabel;
 use App\Models\Label;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Label>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\EstablishmentLabel>
  */
-class LabelFactory extends Factory
+class EstablishmentLabelFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Label::class;
+    protected $model = EstablishmentLabel::class;
 
     /**
      * Define the model's default state.
@@ -25,9 +27,8 @@ class LabelFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->words(2, true),
-            'color' => $this->faker->hexColor(),
-            'description' => $this->faker->sentence(),
+            'establishment_id' => Establishment::factory(),
+            'label_id' => Label::factory(),
         ];
     }
 }

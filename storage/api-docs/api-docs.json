@@ -19,6 +19,275 @@
         }
     ],
     "paths": {
+        "/api/admin/stats/overview": {
+            "get": {
+                "tags": [
+                    "Admin Statistics"
+                ],
+                "summary": "Get general statistics overview",
+                "description": "Get general statistics overview.",
+                "operationId": "c1c9d1b0ca0405cf3584c1fbc0ce8551",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_establishments": {
+                                            "type": "integer"
+                                        },
+                                        "total_users": {
+                                            "type": "integer"
+                                        },
+                                        "total_references": {
+                                            "type": "integer"
+                                        },
+                                        "total_accreditations": {
+                                            "type": "integer"
+                                        },
+                                        "recent_establishments": {
+                                            "description": "Added in last 30 days",
+                                            "type": "integer"
+                                        },
+                                        "recent_accreditations": {
+                                            "description": "Recent accreditations",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/stats/establishments-by-category": {
+            "get": {
+                "tags": [
+                    "Admin Statistics"
+                ],
+                "summary": "Get establishments count by category",
+                "description": "Get establishments count by category.",
+                "operationId": "85da5b2e364097eb251fa98ad1b7b8c3",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "category_name": {
+                                                "type": "string"
+                                            },
+                                            "category_id": {
+                                                "type": "integer"
+                                            },
+                                            "establishments_count": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/stats/geographical-distribution": {
+            "get": {
+                "tags": [
+                    "Admin Statistics"
+                ],
+                "summary": "Get geographical distribution of establishments",
+                "description": "Get geographical distribution of establishments.",
+                "operationId": "a0a1487ae1b9d2c7424137c98bdfa5ae",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "region": {
+                                                "type": "string"
+                                            },
+                                            "establishments_count": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/stats/habilitations-by-year": {
+            "get": {
+                "tags": [
+                    "Admin Statistics"
+                ],
+                "summary": "Get habilitations count by year",
+                "description": "Get habilitations count by year.",
+                "operationId": "66294423a283138428b77c43ef182a39",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "year": {
+                                                "type": "integer"
+                                            },
+                                            "habilitations_count": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/stats/users-by-role": {
+            "get": {
+                "tags": [
+                    "Admin Statistics"
+                ],
+                "summary": "Get user statistics by role",
+                "description": "Get user statistics by role.",
+                "operationId": "a3a5107a1b39e07230c5ebd32c3c57e3",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "role": {
+                                                "type": "string"
+                                            },
+                                            "users_count": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/stats/recent-activity": {
+            "get": {
+                "tags": [
+                    "Admin Statistics"
+                ],
+                "summary": "Get recent activity statistics",
+                "description": "Get recent activity statistics.",
+                "operationId": "efdb9501582dc0b08643866c58379c0b",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "new_establishments_last_7_days": {
+                                            "type": "integer"
+                                        },
+                                        "new_establishments_last_30_days": {
+                                            "type": "integer"
+                                        },
+                                        "new_users_last_7_days": {
+                                            "type": "integer"
+                                        },
+                                        "new_users_last_30_days": {
+                                            "type": "integer"
+                                        },
+                                        "updated_establishments_last_7_days": {
+                                            "type": "integer"
+                                        },
+                                        "updated_establishments_last_30_days": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/register": {
             "post": {
                 "tags": [
@@ -841,6 +1110,423 @@
                     },
                     "409": {
                         "description": "Conflict - Category has associated establishments"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/contact": {
+            "post": {
+                "tags": [
+                    "Contact"
+                ],
+                "summary": "Submit a contact form",
+                "description": "Submit a contact form.",
+                "operationId": "4c51e48c476c2eabdee9c5b207db7a41",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "subject",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255,
+                                        "example": "john@example.com"
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Information Request"
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "maxLength": 2000,
+                                        "example": "I would like more information about..."
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "maxLength": 20,
+                                        "example": "+261 34 12 345 67"
+                                    },
+                                    "organization": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "University of Madagascar"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Contact form submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Votre message a été envoyé avec succès."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error sending message",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Une erreur s'est produite lors de l'envoi du message."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/domains": {
+            "get": {
+                "tags": [
+                    "Domains"
+                ],
+                "summary": "Get a list of all domains",
+                "description": "Display a listing of the domains.",
+                "operationId": "0fb674960fb8707c7469aa43b86f1eec",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by domain name (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by (name, created_at)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "name",
+                            "enum": [
+                                "name",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "Sort direction (asc or desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of domains",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/DomainResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Domains"
+                ],
+                "summary": "Create a new domain",
+                "description": "Store a newly created domain in storage.",
+                "operationId": "0dd1fe568d18e1e60165ec2e19c9a131",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Domain created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/DomainResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/domains/{id}": {
+            "get": {
+                "tags": [
+                    "Domains"
+                ],
+                "summary": "Get a specific domain",
+                "description": "Display the specified domain.",
+                "operationId": "e951b6e07a94b6cea9b9607f1b890479",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the domain to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Domain details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/DomainResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Domain not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Domains"
+                ],
+                "summary": "Update a domain",
+                "description": "Update the specified domain in storage.",
+                "operationId": "5b7375762d09aa88e953d7b1a9c6465b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the domain to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Domain updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/DomainResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Domain not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Domains"
+                ],
+                "summary": "Delete a domain",
+                "description": "Remove the specified domain from storage.",
+                "operationId": "05988a5d849f9344e4ff8a47f86aa690",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the domain to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Domain deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Domain deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Domain not found"
+                    },
+                    "409": {
+                        "description": "Conflict - Domain has associated program offerings"
                     }
                 },
                 "security": [
@@ -1851,6 +2537,973 @@
                 }
             }
         },
+        "/api/admin/export/establishments.csv": {
+            "get": {
+                "tags": [
+                    "Export"
+                ],
+                "summary": "Export establishments data as CSV",
+                "description": "Export establishments data as CSV.",
+                "operationId": "c75400a028d39e5e4fee9e1b2693b8cc",
+                "parameters": [
+                    {
+                        "name": "region",
+                        "in": "query",
+                        "description": "Filter by region name (exact match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Filter by category name (exact match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CSV file download",
+                        "content": {
+                            "text/csv": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/export/establishments.json": {
+            "get": {
+                "tags": [
+                    "Export"
+                ],
+                "summary": "Export establishments data as JSON",
+                "description": "Export establishments data as JSON.",
+                "operationId": "26ea914ca7598340e095d411a083f12a",
+                "responses": {
+                    "200": {
+                        "description": "JSON file download",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/faq": {
+            "get": {
+                "tags": [
+                    "FAQ"
+                ],
+                "summary": "Get a list of FAQ items",
+                "description": "Display a listing of FAQ items.",
+                "operationId": "57c4fa7ceebfb20a59c69528a9a7067e",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Filter by category",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "active_only",
+                        "in": "query",
+                        "description": "Show only active FAQ items (default: true)",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FaqItem"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/faq": {
+            "post": {
+                "tags": [
+                    "FAQ"
+                ],
+                "summary": "Create a new FAQ item",
+                "description": "Store a newly created FAQ item in storage.",
+                "operationId": "51b1e66d9087756a1fba6ade2ffd7ed7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question",
+                                    "answer"
+                                ],
+                                "properties": {
+                                    "question": {
+                                        "type": "string",
+                                        "maxLength": 500
+                                    },
+                                    "answer": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "sort_order": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "FAQ item created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaqItem"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/faq/{id}": {
+            "get": {
+                "tags": [
+                    "FAQ"
+                ],
+                "summary": "Get a specific FAQ item",
+                "description": "Display the specified FAQ item.",
+                "operationId": "6bc956af0c4eac86d554e9ee95cecedc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "FAQ item ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaqItem"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "FAQ item not found"
+                    }
+                }
+            }
+        },
+        "/api/admin/faq/{id}": {
+            "put": {
+                "tags": [
+                    "FAQ"
+                ],
+                "summary": "Update a FAQ item",
+                "description": "Update the specified FAQ item in storage.",
+                "operationId": "9cb284aac65d6f87f80170a0f03272ca",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "FAQ item ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "question": {
+                                        "type": "string",
+                                        "maxLength": 500
+                                    },
+                                    "answer": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "sort_order": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "FAQ item updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FaqItem"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "FAQ item not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "FAQ"
+                ],
+                "summary": "Delete a FAQ item",
+                "description": "Remove the specified FAQ item from storage.",
+                "operationId": "a3fe7c05455842eb83d9c13b2a0bbfc8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "FAQ item ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "FAQ item deleted successfully"
+                    },
+                    "403": {
+                        "description": "Access denied"
+                    },
+                    "404": {
+                        "description": "FAQ item not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/grades": {
+            "get": {
+                "tags": [
+                    "Grades"
+                ],
+                "summary": "Get a list of all grades",
+                "description": "Display a listing of the grades.",
+                "operationId": "937082441649d3c80b32572bdcd1908b",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by grade name (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by (name, level, created_at)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "level",
+                            "enum": [
+                                "name",
+                                "level",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "Sort direction (asc or desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of grades",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/GradeResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Grades"
+                ],
+                "summary": "Create a new grade",
+                "description": "Store a newly created grade in storage.",
+                "operationId": "09ba8a5b3973d399754f95ab9d83b9ab",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "level": {
+                                        "type": "integer",
+                                        "maximum": 10,
+                                        "minimum": 1,
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Grade created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/GradeResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/grades/{id}": {
+            "get": {
+                "tags": [
+                    "Grades"
+                ],
+                "summary": "Get a specific grade",
+                "description": "Display the specified grade.",
+                "operationId": "336255077855ed76091fbce88d6d11df",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the grade to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Grade details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/GradeResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Grade not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Grades"
+                ],
+                "summary": "Update a grade",
+                "description": "Update the specified grade in storage.",
+                "operationId": "945be0e2718fba53ecb91c12eca274c1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the grade to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "level": {
+                                        "type": "integer",
+                                        "maximum": 10,
+                                        "minimum": 1,
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Grade updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/GradeResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Grade not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Grades"
+                ],
+                "summary": "Delete a grade",
+                "description": "Remove the specified grade from storage.",
+                "operationId": "f3957d4c8e9fedc3599185c50b5fdc24",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the grade to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Grade deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Grade deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Grade not found"
+                    },
+                    "409": {
+                        "description": "Conflict - Grade has associated program offerings"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/labels": {
+            "get": {
+                "tags": [
+                    "Labels"
+                ],
+                "summary": "Get a list of all labels",
+                "description": "Display a listing of the labels.",
+                "operationId": "2ac7cbc4186e08de3ec96a7898844f10",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by label name (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by (name, created_at)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "name",
+                            "enum": [
+                                "name",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "Sort direction (asc or desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of labels",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/LabelResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Labels"
+                ],
+                "summary": "Create a new label",
+                "description": "Store a newly created label in storage.",
+                "operationId": "02bc8c47faba31d6682c4bafd253f42c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "pattern": "^#[0-9A-Fa-f]{6}$",
+                                        "example": "#FF5733"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Label created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/LabelResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/labels/{id}": {
+            "get": {
+                "tags": [
+                    "Labels"
+                ],
+                "summary": "Get a specific label",
+                "description": "Display the specified label.",
+                "operationId": "39bee366cc7adef2667c63f050815718",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the label to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Label details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/LabelResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Label not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Labels"
+                ],
+                "summary": "Update a label",
+                "description": "Update the specified label in storage.",
+                "operationId": "e7b8ab515f4ba489ed5d3bfe4b9b354b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the label to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "pattern": "^#[0-9A-Fa-f]{6}$",
+                                        "example": "#FF5733"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Label updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/LabelResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Label not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Labels"
+                ],
+                "summary": "Delete a label",
+                "description": "Remove the specified label from storage.",
+                "operationId": "2e8f90cafd1d857e5da061c85c627b00",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the label to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Label deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Label deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Label not found"
+                    },
+                    "409": {
+                        "description": "Conflict - Label has associated establishments"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/lists": {
             "get": {
                 "tags": [
@@ -1900,108 +3553,53 @@
                 }
             }
         },
-        "/api/domains": {
-            "get": {
-                "tags": [
-                    "Lists"
-                ],
-                "summary": "Get a list of all domains",
-                "description": "Get all domains for filter dropdowns.",
-                "operationId": "439e1afc93d6dc807f095edec9e8c1e6",
-                "responses": {
-                    "200": {
-                        "description": "List of domains",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "Computer Science"
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "Study of computers and computational systems",
-                                                        "nullable": true
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/grades": {
-            "get": {
-                "tags": [
-                    "Lists"
-                ],
-                "summary": "Get a list of all grades",
-                "description": "Get all grades for filter dropdowns.",
-                "operationId": "271ceaa572a096d6eb3e20f238f52e54",
-                "responses": {
-                    "200": {
-                        "description": "List of grades",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "Licence"
-                                                    },
-                                                    "level": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "Bachelor's degree equivalent",
-                                                        "nullable": true
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/mentions": {
             "get": {
                 "tags": [
-                    "Lists"
+                    "Mentions"
                 ],
                 "summary": "Get a list of all mentions",
-                "description": "Get all mentions for filter dropdowns.",
-                "operationId": "1100cf39bf8a47c0ded3617252c6821e",
+                "description": "Display a listing of the mentions.",
+                "operationId": "3f3bfbd5422dd420cd94b6c385a1361f",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by mention name (partial match)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Field to sort by (name, created_at)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "name",
+                            "enum": [
+                                "name",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_direction",
+                        "in": "query",
+                        "description": "Sort direction (asc or desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "List of mentions",
@@ -2012,22 +3610,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "Computer Science"
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "Study of algorithms and computational systems",
-                                                        "nullable": true
-                                                    }
-                                                },
-                                                "type": "object"
+                                                "$ref": "#/components/schemas/MentionResource"
                                             }
                                         }
                                     },
@@ -2037,49 +3620,321 @@
                         }
                     }
                 }
-            }
-        },
-        "/api/labels": {
-            "get": {
+            },
+            "post": {
                 "tags": [
-                    "Lists"
+                    "Mentions"
                 ],
-                "summary": "Get a list of all labels",
-                "description": "Get all labels for filter dropdowns.",
-                "operationId": "73766328d6e9365af8ce9c00cf93e827",
+                "summary": "Create a new mention",
+                "description": "Store a newly created mention in storage.",
+                "operationId": "3b4d058d11fdea554311c15cef3451fa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "200": {
-                        "description": "List of labels",
+                    "201": {
+                        "description": "Mention created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "Excellence"
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "Institution recognized for excellence",
-                                                        "nullable": true
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
+                                            "$ref": "#/components/schemas/MentionResource"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mentions/{id}": {
+            "get": {
+                "tags": [
+                    "Mentions"
+                ],
+                "summary": "Get a specific mention",
+                "description": "Display the specified mention.",
+                "operationId": "ae7977780403c271422b490d83e752c2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the mention to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mention details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/MentionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Mention not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Mentions"
+                ],
+                "summary": "Update a mention",
+                "description": "Update the specified mention in storage.",
+                "operationId": "d17b683a464abc83a74b9ec528d2b446",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the mention to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mention updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/MentionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Mention not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Mentions"
+                ],
+                "summary": "Delete a mention",
+                "description": "Remove the specified mention from storage.",
+                "operationId": "e80744f69a926d1bbb3e9cd901f2f92b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the mention to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mention deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Mention deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Mention not found"
+                    },
+                    "409": {
+                        "description": "Conflict - Mention has associated program offerings"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/documents": {
+            "get": {
+                "tags": [
+                    "Official Documents"
+                ],
+                "summary": "Get a list of official documents",
+                "description": "Display a listing of official documents.",
+                "operationId": "82e584486c33d8f923469b59b9c48e80",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filter by document type",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "active_only",
+                        "in": "query",
+                        "description": "Show only active documents (default: true)",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/OfficialDocument"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/documents/{id}": {
+            "get": {
+                "tags": [
+                    "Official Documents"
+                ],
+                "summary": "Get a specific official document",
+                "description": "Display the specified official document.",
+                "operationId": "6d9e37df4c24f33b0e2509ec428dbe8f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Document ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OfficialDocument"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Document not found"
                     }
                 }
             }
@@ -2284,6 +4139,43 @@
     },
     "components": {
         "schemas": {
+            "AdminStatsOverview": {
+                "title": "Admin Statistics Overview",
+                "description": "General statistics overview for administrators",
+                "properties": {
+                    "total_establishments": {
+                        "description": "Total number of establishments",
+                        "type": "integer",
+                        "example": 150
+                    },
+                    "total_users": {
+                        "description": "Total number of users",
+                        "type": "integer",
+                        "example": 25
+                    },
+                    "total_references": {
+                        "description": "Total number of references",
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "total_accreditations": {
+                        "description": "Total number of accreditations",
+                        "type": "integer",
+                        "example": 300
+                    },
+                    "recent_establishments": {
+                        "description": "Number of establishments added in the last 30 days",
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "recent_accreditations": {
+                        "description": "Number of recent accreditations",
+                        "type": "integer",
+                        "example": 12
+                    }
+                },
+                "type": "object"
+            },
             "CategoryDetailResource": {
                 "title": "Category Detail Resource",
                 "description": "Detailed category resource",
@@ -2333,6 +4225,84 @@
                     "description": {
                         "type": "string",
                         "example": "State-funded universities",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ContactFormRequest": {
+                "title": "Contact Form Request",
+                "description": "Contact form submission data",
+                "required": [
+                    "name",
+                    "email",
+                    "subject",
+                    "message"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Contact person name",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "Contact email address",
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "example": "john@example.com"
+                    },
+                    "subject": {
+                        "description": "Message subject",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Information Request"
+                    },
+                    "message": {
+                        "description": "Message content",
+                        "type": "string",
+                        "maxLength": 2000,
+                        "example": "I would like more information about your programs."
+                    },
+                    "phone": {
+                        "description": "Contact phone number",
+                        "type": "string",
+                        "maxLength": 20,
+                        "example": "+261 34 12 345 67",
+                        "nullable": true
+                    },
+                    "organization": {
+                        "description": "Contact organization",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "University of Madagascar",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "DomainResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Computer Science"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Study of computers and computational systems",
                         "nullable": true
                     },
                     "created_at": {
@@ -2776,6 +4746,116 @@
                 },
                 "type": "object"
             },
+            "FaqItem": {
+                "title": "FAQ Item",
+                "description": "Frequently Asked Question item",
+                "properties": {
+                    "id": {
+                        "description": "FAQ item ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "question": {
+                        "description": "The question text",
+                        "type": "string",
+                        "example": "Comment puis-je m'inscrire dans un établissement?"
+                    },
+                    "answer": {
+                        "description": "The answer text",
+                        "type": "string",
+                        "example": "Pour vous inscrire, vous devez d'abord vérifier les conditions d'admission..."
+                    },
+                    "category": {
+                        "description": "FAQ category",
+                        "type": "string",
+                        "example": "Inscription",
+                        "nullable": true
+                    },
+                    "sort_order": {
+                        "description": "Sort order for display",
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "is_active": {
+                        "description": "Whether the FAQ item is active",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-19T15:30:00Z"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-19T15:30:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "GradeResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Licence"
+                    },
+                    "level": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Bachelor's degree level",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "LabelResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Excellence"
+                    },
+                    "color": {
+                        "type": "string",
+                        "example": "#FF5733"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Label for excellent institutions",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
             "MapMarker": {
                 "title": "Map Marker",
                 "description": "Lightweight establishment data for map markers",
@@ -2805,6 +4885,116 @@
                     "category_name": {
                         "type": "string",
                         "example": "Public University"
+                    }
+                },
+                "type": "object"
+            },
+            "MentionResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Informatique"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Computer Science specialization",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "OfficialDocument": {
+                "title": "Official Document",
+                "description": "Official document related to establishments or accreditations",
+                "properties": {
+                    "id": {
+                        "description": "Document ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "description": "Document title",
+                        "type": "string",
+                        "example": "Décret d'habilitation 2025"
+                    },
+                    "description": {
+                        "description": "Document description",
+                        "type": "string",
+                        "example": "Décret portant habilitation des établissements d'enseignement supérieur",
+                        "nullable": true
+                    },
+                    "document_url": {
+                        "description": "External URL to the document",
+                        "type": "string",
+                        "example": "https://example.com/documents/decree-2025.pdf",
+                        "nullable": true
+                    },
+                    "document_type": {
+                        "description": "Type of document",
+                        "type": "string",
+                        "example": "decree",
+                        "nullable": true
+                    },
+                    "file_size": {
+                        "description": "File size in bytes",
+                        "type": "integer",
+                        "example": 1024000,
+                        "nullable": true
+                    },
+                    "mime_type": {
+                        "description": "MIME type of the document",
+                        "type": "string",
+                        "example": "application/pdf",
+                        "nullable": true
+                    },
+                    "sort_order": {
+                        "description": "Sort order for display",
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "reference": {
+                        "description": "Related reference information",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "main_date": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2025-01-15"
+                            },
+                            "reference_number": {
+                                "type": "string",
+                                "example": "DECREE-2025-001"
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-19T15:30:00Z"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-19T15:30:00Z"
                     }
                 },
                 "type": "object"
@@ -2974,12 +5164,24 @@
     },
     "tags": [
         {
+            "name": "Admin Statistics",
+            "description": "Statistics endpoints for administrators"
+        },
+        {
             "name": "Authentication",
             "description": "Endpoints for user authentication and profile management"
         },
         {
             "name": "Categories",
             "description": "Endpoints for accessing and managing educational institution categories"
+        },
+        {
+            "name": "Contact",
+            "description": "Contact form submission endpoint"
+        },
+        {
+            "name": "Domains",
+            "description": "Endpoints for accessing and managing educational domains/fields of study"
         },
         {
             "name": "Establishments",
@@ -2990,8 +5192,32 @@
             "description": "Endpoints for map markers and establishment comparison"
         },
         {
+            "name": "Export",
+            "description": "Export endpoints for data download"
+        },
+        {
+            "name": "FAQ",
+            "description": "Endpoints for managing FAQ items"
+        },
+        {
+            "name": "Grades",
+            "description": "Endpoints for accessing and managing academic grades/levels"
+        },
+        {
+            "name": "Labels",
+            "description": "Endpoints for accessing and managing establishment labels"
+        },
+        {
             "name": "Lists",
             "description": "Endpoints for accessing simple list data for filters and forms"
+        },
+        {
+            "name": "Mentions",
+            "description": "Endpoints for accessing and managing academic mentions/specializations"
+        },
+        {
+            "name": "Official Documents",
+            "description": "Endpoints for accessing official documents"
         },
         {
             "name": "Search History",

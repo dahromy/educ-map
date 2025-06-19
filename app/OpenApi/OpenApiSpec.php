@@ -49,6 +49,26 @@ namespace App\OpenApi;
  *     name="Search History",
  *     description="Endpoints for managing user search history"
  * )
+ * @OA\Tag(
+ *     name="FAQ",
+ *     description="Endpoints for managing FAQ items"
+ * )
+ * @OA\Tag(
+ *     name="Official Documents",
+ *     description="Endpoints for accessing official documents"
+ * )
+ * @OA\Tag(
+ *     name="Contact",
+ *     description="Contact form submission endpoint"
+ * )
+ * @OA\Tag(
+ *     name="Admin Statistics",
+ *     description="Statistics endpoints for administrators"
+ * )
+ * @OA\Tag(
+ *     name="Export",
+ *     description="Export endpoints for data download"
+ * )
  */
 class OpenApiSpec
 {

@@ -22,6 +22,7 @@ return new class extends Migration {
         Schema::create('labels', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('color', 7)->nullable(); // For hex color codes like #FF5733
             $table->string('description')->nullable();
             $table->timestamps();
         });

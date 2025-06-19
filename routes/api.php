@@ -4,10 +4,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\DomainController;
+use App\Http\Controllers\API\GradeController;
+use App\Http\Controllers\API\MentionController;
+use App\Http\Controllers\API\LabelController;
 use App\Http\Controllers\API\EstablishmentController;
 use App\Http\Controllers\API\EstablishmentSpecialController;
 use App\Http\Controllers\API\ListController;
 use App\Http\Controllers\API\SearchHistoryController;
+use App\Http\Controllers\API\FaqController;
+use App\Http\Controllers\API\OfficialDocumentController;
+use App\Http\Controllers\API\ContactController;
+use App\Http\Controllers\API\AdminStatsController;
+use App\Http\Controllers\API\ExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,10 +50,18 @@ Route::get('/categories/{category}', [CategoryController::class, 'show']);
 
 // Public List Routes for Filters/Forms
 Route::get('/lists', [ListController::class, 'index']);
-Route::get('/domains', [ListController::class, 'domains']);
-Route::get('/grades', [ListController::class, 'grades']);
-Route::get('/mentions', [ListController::class, 'mentions']);
-Route::get('/labels', [ListController::class, 'labels']);
+// Note: Individual entity routes (domains, grades, mentions, labels) are handled by their respective controllers below
+
+// Public FAQ Routes
+Route::get('/faq', [FaqController::class, 'index']);
+Route::get('/faq/{faqItem}', [FaqController::class, 'show']);
+
+// Public Official Documents Routes
+Route::get('/documents', [OfficialDocumentController::class, 'index']);
+Route::get('/documents/{document}', [OfficialDocumentController::class, 'show']);
+
+// Public Contact Form
+Route::post('/contact', [ContactController::class, 'submit']);
 
 // Public Establishment Routes
 Route::get('/establishments/recent', [EstablishmentSpecialController::class, 'recent']);
@@ -62,9 +79,60 @@ Route::middleware(['auth:sanctum', 'role:ROLE_ADMIN'])->group(function () {
     Route::post('/categories', [CategoryController::class, 'store']);
     Route::put('/categories/{category}', [CategoryController::class, 'update']);
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
+
+    // FAQ management routes (Admin only)
+    Route::post('/admin/faq', [FaqController::class, 'store']);
+    Route::put('/admin/faq/{faqItem}', [FaqController::class, 'update']);
+    Route::delete('/admin/faq/{faqItem}', [FaqController::class, 'destroy']);
+
+    // Admin Statistics routes
+    Route::prefix('admin/stats')->group(function () {
+        Route::get('/overview', [AdminStatsController::class, 'overview']);
+        Route::get('/establishments-by-category', [AdminStatsController::class, 'establishmentsByCategory']);
+        Route::get('/geographical-distribution', [AdminStatsController::class, 'geographicalDistribution']);
+        Route::get('/habilitations-by-year', [AdminStatsController::class, 'habilitationsByYear']);
+        Route::get('/users-by-role', [AdminStatsController::class, 'usersByRole']);
+        Route::get('/recent-activity', [AdminStatsController::class, 'recentActivity']);
+    });
+
+    // Export routes (Admin only)
+    Route::prefix('admin/export')->group(function () {
+        Route::get('/establishments.csv', [ExportController::class, 'establishmentsCsv']);
+        Route::get('/establishments.json', [ExportController::class, 'establishmentsJson']);
+    });
 });
 
 // Protected Establishment Routes (Admin or Owner)
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::match(['put', 'patch'], '/establishments/{establishment}', [EstablishmentController::class, 'update']);
+
+    // CRUD routes for list entities (Admin only)
+    Route::middleware('role:ROLE_ADMIN')->group(function () {
+        // Categories CRUD
+        Route::post('/categories', [CategoryController::class, 'store']);
+        Route::match(['put', 'patch'], '/categories/{category}', [CategoryController::class, 'update']);
+        Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
+
+        // Domains CRUD
+        Route::apiResource('domains', DomainController::class)->except(['index', 'show']);
+
+        // Grades CRUD
+        Route::apiResource('grades', GradeController::class)->except(['index', 'show']);
+
+        // Mentions CRUD
+        Route::apiResource('mentions', MentionController::class)->except(['index', 'show']);
+
+        // Labels CRUD
+        Route::apiResource('labels', LabelController::class)->except(['index', 'show']);
+    });
 });
+
+// Public endpoints for list entities (index and show)
+Route::get('/domains', [DomainController::class, 'index']);
+Route::get('/domains/{domain}', [DomainController::class, 'show']);
+Route::get('/grades', [GradeController::class, 'index']);
+Route::get('/grades/{grade}', [GradeController::class, 'show']);
+Route::get('/mentions', [MentionController::class, 'index']);
+Route::get('/mentions/{mention}', [MentionController::class, 'show']);
+Route::get('/labels', [LabelController::class, 'index']);
+Route::get('/labels/{label}', [LabelController::class, 'show']);

@@ -67,6 +67,12 @@ class User extends Authenticatable
      */
     public function hasRole(string $role): bool
     {
-        return in_array($role, $this->roles ?? []);
+        // Handle both string and array formats for roles
+        if (is_array($this->roles)) {
+            return in_array($role, $this->roles);
+        }
+
+        // Handle string format (single role)
+        return $this->roles === $role;
     }
 }
