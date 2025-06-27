@@ -369,6 +369,14 @@ lando psql
 lando artisan import:education-data-improved
 # Use --dry-run to simulate the import without changing the database
 lando artisan import:education-data-improved --dry-run
+
+# Without Lando
+php artisan migrate:fresh --seed
+
+# Import data from JSON source (ensure storage/app/data/data.json exists)
+php artisan import:education-data-improved
+# Use --dry-run to simulate the import without changing the database
+php artisan import:education-data-improved --dry-run
 ```
 
 ### 🐞 Debugging

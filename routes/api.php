@@ -17,6 +17,8 @@ use App\Http\Controllers\API\OfficialDocumentController;
 use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\AdminStatsController;
 use App\Http\Controllers\API\ExportController;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\RoleDocumentationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,8 +32,11 @@ use App\Http\Controllers\API\ExportController;
 */
 
 // Authentication Routes
-Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// Role Documentation Route (Public)
+Route::get('/roles/documentation', [RoleDocumentationController::class, 'documentation']);
+
 Route::middleware('auth:sanctum')->group(function () {
     // User profile routes
     Route::get('/me', [AuthController::class, 'me']);
@@ -94,6 +99,9 @@ Route::middleware(['auth:sanctum', 'role:ROLE_ADMIN'])->group(function () {
         Route::get('/users-by-role', [AdminStatsController::class, 'usersByRole']);
         Route::get('/recent-activity', [AdminStatsController::class, 'recentActivity']);
     });
+
+    // User management routes (Admin only)
+    Route::apiResource('users', UserController::class);
 
     // Export routes (Admin only)
     Route::prefix('admin/export')->group(function () {

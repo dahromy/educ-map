@@ -203,7 +203,7 @@
                     "Admin Statistics"
                 ],
                 "summary": "Get user statistics by role",
-                "description": "Get user statistics by role.",
+                "description": "Returns count of users for each role type. Available roles: ROLE_USER (regular users), ROLE_ADMIN (administrators), ROLE_ESTABLISHMENT (institution users)",
                 "operationId": "a3a5107a1b39e07230c5ebd32c3c57e3",
                 "responses": {
                     "200": {
@@ -211,24 +211,41 @@
                         "content": {
                             "application/json": {
                                 "schema": {
+                                    "description": "Array of role statistics",
                                     "type": "array",
                                     "items": {
                                         "properties": {
                                             "role": {
-                                                "type": "string"
+                                                "$ref": "#/components/schemas/UserRole"
                                             },
                                             "users_count": {
-                                                "type": "integer"
+                                                "description": "Number of users with this role",
+                                                "type": "integer",
+                                                "example": 15
                                             }
                                         },
                                         "type": "object"
                                     }
-                                }
+                                },
+                                "example": [
+                                    {
+                                        "role": "ROLE_USER",
+                                        "users_count": 150
+                                    },
+                                    {
+                                        "role": "ROLE_ADMIN",
+                                        "users_count": 5
+                                    },
+                                    {
+                                        "role": "ROLE_ESTABLISHMENT",
+                                        "users_count": 25
+                                    }
+                                ]
                             }
                         }
                     },
                     "403": {
-                        "description": "Access denied"
+                        "description": "Access denied - Admin role required"
                     }
                 },
                 "security": [
@@ -288,132 +305,6 @@
                 ]
             }
         },
-        "/api/register": {
-            "post": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Create a new user account",
-                "description": "Register a new user.",
-                "operationId": "a718f172ff3ac464d723835815f8fb57",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "name",
-                                    "email",
-                                    "password",
-                                    "password_confirmation"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Test User"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "test@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "User registered successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "User registered successfully"
-                                        },
-                                        "user": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Test User"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "format": "email",
-                                                    "example": "test@example.com"
-                                                },
-                                                "roles": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    },
-                                                    "example": [
-                                                        "ROLE_USER"
-                                                    ]
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "1|laravel_sanctum_token..."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "email": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    },
-                                                    "example": [
-                                                        "The email has already been taken."
-                                                    ]
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/login": {
             "post": {
                 "tags": [
@@ -471,9 +362,10 @@
                                                     "example": "test@example.com"
                                                 },
                                                 "roles": {
+                                                    "description": "User roles. Available roles: ROLE_USER (regular user), ROLE_ADMIN (administrator), ROLE_ESTABLISHMENT (institution user)",
                                                     "type": "array",
                                                     "items": {
-                                                        "type": "string"
+                                                        "$ref": "#/components/schemas/UserRole"
                                                     },
                                                     "example": [
                                                         "ROLE_USER"
@@ -554,9 +446,10 @@
                                             "example": "test@example.com"
                                         },
                                         "roles": {
+                                            "description": "User roles determining access permissions",
                                             "type": "array",
                                             "items": {
-                                                "type": "string"
+                                                "$ref": "#/components/schemas/UserRole"
                                             },
                                             "example": [
                                                 "ROLE_USER"
@@ -3939,6 +3832,28 @@
                 }
             }
         },
+        "/api/roles/documentation": {
+            "get": {
+                "tags": [
+                    "Authorization & Roles"
+                ],
+                "summary": "Get role-based access control documentation",
+                "description": "Returns comprehensive documentation about available user roles, their permissions, and access restrictions. This is a documentation endpoint that explains the RBAC system.",
+                "operationId": "6f40f298dee20253826b8eb9d99c3eae",
+                "responses": {
+                    "200": {
+                        "description": "Role documentation retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoleDocumentation"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/me/searches": {
             "get": {
                 "tags": [
@@ -4135,10 +4050,545 @@
                     }
                 ]
             }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Get a paginated list of users (Admin only)",
+                "description": "Display a listing of users.",
+                "operationId": "d7a57f4d7de18fb0f92501172472c9b6",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Filter by user role",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ROLE_USER",
+                                "ROLE_ADMIN",
+                                "ROLE_ESTABLISHMENT"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by name or email",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin role required"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Create a new user (Admin only)",
+                "description": "Store a newly created user.",
+                "operationId": "9fea6f2adcb69614c521a7733358382d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "roles"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "roles": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ROLE_USER",
+                                                "ROLE_ADMIN",
+                                                "ROLE_ESTABLISHMENT"
+                                            ]
+                                        },
+                                        "example": [
+                                            "ROLE_USER"
+                                        ]
+                                    },
+                                    "associated_establishment": {
+                                        "description": "Required if user has ROLE_ESTABLISHMENT",
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin role required"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Get a specific user (Admin only)",
+                "description": "Display the specified user.",
+                "operationId": "40a5104e23b52137e78c3d3ac48b88a8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin role required"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Update a user (Admin only)",
+                "description": "Update the specified user.",
+                "operationId": "b166772cec9714067040e77cf14beeba",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "roles"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "description": "Optional - only include if changing password",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newpassword123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newpassword123"
+                                    },
+                                    "roles": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "ROLE_USER",
+                                                "ROLE_ADMIN",
+                                                "ROLE_ESTABLISHMENT"
+                                            ]
+                                        },
+                                        "example": [
+                                            "ROLE_USER"
+                                        ]
+                                    },
+                                    "associated_establishment": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin role required"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User Management"
+                ],
+                "summary": "Delete a user (Admin only)",
+                "description": "Remove the specified user from storage.",
+                "operationId": "ce06860a51ab016ef66e753544fe4563",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Admin role required"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "422": {
+                        "description": "Cannot delete yourself"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "RolePermissions": {
+                "title": "Role Permissions",
+                "description": "Complete role-based access control system documentation",
+                "properties": {
+                    "ROLE_USER": {
+                        "description": "Regular user permissions - authenticated users with basic access",
+                        "properties": {
+                            "description": {
+                                "type": "string",
+                                "example": "Regular users with authenticated access to public data and personal features"
+                            },
+                            "permissions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "View all establishments and their details",
+                                    "Search establishments with advanced filters",
+                                    "Access map data and markers",
+                                    "Compare multiple establishments",
+                                    "Save and manage personal search history",
+                                    "Update own user profile",
+                                    "Access FAQ and official documents",
+                                    "Submit contact form"
+                                ]
+                            },
+                            "endpoints": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/me",
+                                    "PUT /api/me",
+                                    "POST /api/logout",
+                                    "GET /api/me/searches",
+                                    "POST /api/me/searches",
+                                    "DELETE /api/me/searches/{id}",
+                                    "All public endpoints"
+                                ]
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "ROLE_ADMIN": {
+                        "description": "Administrator permissions - full system access",
+                        "properties": {
+                            "description": {
+                                "type": "string",
+                                "example": "System administrators with complete access to all functionality including CRUD operations and admin tools"
+                            },
+                            "permissions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "All ROLE_USER permissions",
+                                    "Create, update, and delete establishments",
+                                    "Manage all system entities (categories, domains, grades, mentions, labels)",
+                                    "Create, update, and delete references and accreditations",
+                                    "Manage FAQ items and official documents",
+                                    "Access comprehensive admin statistics and analytics",
+                                    "Export data in multiple formats (CSV, JSON)",
+                                    "Manage user accounts and assign roles",
+                                    "Full system configuration and maintenance"
+                                ]
+                            },
+                            "endpoints": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "All ROLE_USER endpoints",
+                                    "POST /api/establishments",
+                                    "DELETE /api/establishments/{id}",
+                                    "POST|PUT|DELETE /api/categories",
+                                    "POST|PUT|DELETE /api/domains",
+                                    "POST|PUT|DELETE /api/grades",
+                                    "POST|PUT|DELETE /api/mentions",
+                                    "POST|PUT|DELETE /api/labels",
+                                    "POST|PUT|DELETE /api/admin/faq",
+                                    "GET /api/admin/stats/*",
+                                    "GET /api/admin/export/*"
+                                ]
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "ROLE_ESTABLISHMENT": {
+                        "description": "Establishment user permissions - limited access to own institution data",
+                        "properties": {
+                            "description": {
+                                "type": "string",
+                                "example": "Institution representatives with controlled access to manage only their own establishment data"
+                            },
+                            "permissions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "All ROLE_USER permissions",
+                                    "Update own establishment information (address, contact details)",
+                                    "Manage own establishment profile and logo",
+                                    "Update establishment description and indicators",
+                                    "View own establishment statistics",
+                                    "Manage own establishment departments and programs"
+                                ]
+                            },
+                            "endpoints": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "All ROLE_USER endpoints",
+                                    "PUT|PATCH /api/establishments/{id} (own establishment only)"
+                                ]
+                            },
+                            "restrictions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "Can only modify their associated establishment (linked via associated_establishment field)",
+                                    "Cannot create or delete establishments",
+                                    "Cannot manage system-wide entities",
+                                    "Cannot access admin statistics or export functions",
+                                    "Cannot manage other users or assign roles"
+                                ]
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "public_access": {
+                        "description": "Public endpoints accessible without authentication",
+                        "properties": {
+                            "endpoints": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "POST /api/login",
+                                    "GET /api/establishments",
+                                    "GET /api/establishments/{id}",
+                                    "GET /api/establishments/recent",
+                                    "GET /api/map/markers",
+                                    "GET /api/compare",
+                                    "GET /api/categories",
+                                    "GET /api/domains",
+                                    "GET /api/grades",
+                                    "GET /api/mentions",
+                                    "GET /api/labels",
+                                    "GET /api/lists",
+                                    "GET /api/faq",
+                                    "GET /api/documents",
+                                    "POST /api/contact"
+                                ]
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
             "AdminStatsOverview": {
                 "title": "Admin Statistics Overview",
                 "description": "General statistics overview for administrators",
@@ -4312,6 +4762,223 @@
                     "updated_at": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "EndpointRoleMapping": {
+                "title": "Endpoint Role Mapping",
+                "description": "Complete mapping of API endpoints to required roles and permissions",
+                "properties": {
+                    "public_endpoints": {
+                        "description": "Endpoints accessible without authentication",
+                        "properties": {
+                            "authentication": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "POST /api/login"
+                                ]
+                            },
+                            "establishments": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/establishments",
+                                    "GET /api/establishments/{id}",
+                                    "GET /api/establishments/recent"
+                                ]
+                            },
+                            "map_and_comparison": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/map/markers",
+                                    "GET /api/compare"
+                                ]
+                            },
+                            "reference_data": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/categories",
+                                    "GET /api/domains",
+                                    "GET /api/grades",
+                                    "GET /api/mentions",
+                                    "GET /api/labels",
+                                    "GET /api/lists"
+                                ]
+                            },
+                            "content_and_support": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/faq",
+                                    "GET /api/faq/{id}",
+                                    "GET /api/documents",
+                                    "GET /api/documents/{id}",
+                                    "POST /api/contact"
+                                ]
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "authenticated_endpoints": {
+                        "description": "Endpoints requiring authentication (ROLE_USER minimum)",
+                        "properties": {
+                            "user_profile": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/me",
+                                    "PUT /api/me",
+                                    "POST /api/logout"
+                                ]
+                            },
+                            "search_history": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/me/searches",
+                                    "POST /api/me/searches",
+                                    "DELETE /api/me/searches/{id}"
+                                ]
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "admin_only_endpoints": {
+                        "description": "Endpoints requiring ROLE_ADMIN",
+                        "properties": {
+                            "establishment_management": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "POST /api/establishments",
+                                    "DELETE /api/establishments/{id}"
+                                ]
+                            },
+                            "entity_management": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "POST /api/categories",
+                                    "PUT /api/categories/{id}",
+                                    "DELETE /api/categories/{id}",
+                                    "POST /api/domains",
+                                    "PUT /api/domains/{id}",
+                                    "DELETE /api/domains/{id}",
+                                    "POST /api/grades",
+                                    "PUT /api/grades/{id}",
+                                    "DELETE /api/grades/{id}",
+                                    "POST /api/mentions",
+                                    "PUT /api/mentions/{id}",
+                                    "DELETE /api/mentions/{id}",
+                                    "POST /api/labels",
+                                    "PUT /api/labels/{id}",
+                                    "DELETE /api/labels/{id}"
+                                ]
+                            },
+                            "content_management": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "POST /api/admin/faq",
+                                    "PUT /api/admin/faq/{id}",
+                                    "DELETE /api/admin/faq/{id}"
+                                ]
+                            },
+                            "statistics_and_analytics": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/admin/stats/overview",
+                                    "GET /api/admin/stats/establishments-by-category",
+                                    "GET /api/admin/stats/geographical-distribution",
+                                    "GET /api/admin/stats/habilitations-by-year",
+                                    "GET /api/admin/stats/users-by-role",
+                                    "GET /api/admin/stats/recent-activity"
+                                ]
+                            },
+                            "data_export": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/admin/export/establishments.csv",
+                                    "GET /api/admin/export/establishments.json"
+                                ]
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "establishment_user_endpoints": {
+                        "description": "Endpoints requiring ROLE_ESTABLISHMENT with ownership validation",
+                        "properties": {
+                            "own_establishment_management": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "PUT /api/establishments/{id}",
+                                    "PATCH /api/establishments/{id}"
+                                ]
+                            },
+                            "ownership_validation": {
+                                "type": "string",
+                                "example": "User can only modify establishments where user.associated_establishment equals the establishment ID"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "flexible_access_endpoints": {
+                        "description": "Endpoints with role-based access variations",
+                        "properties": {
+                            "establishment_updates": {
+                                "properties": {
+                                    "endpoint": {
+                                        "type": "string",
+                                        "example": "PUT|PATCH /api/establishments/{id}"
+                                    },
+                                    "access_rules": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "ROLE_ADMIN: Can update any establishment",
+                                            "ROLE_ESTABLISHMENT: Can only update own associated establishment"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
                     }
                 },
                 "type": "object"
@@ -5076,6 +5743,425 @@
                 },
                 "type": "object"
             },
+            "RoleDocumentation": {
+                "title": "Role Documentation",
+                "description": "Comprehensive documentation for the role-based access control system",
+                "properties": {
+                    "available_roles": {
+                        "description": "Available user roles and their permissions",
+                        "properties": {
+                            "ROLE_USER": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Regular User"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Standard users with basic read access to public data"
+                                    },
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "View establishments and their details",
+                                            "Search establishments with filters",
+                                            "Access map data and markers",
+                                            "Compare establishments",
+                                            "Save and manage search history (when authenticated)",
+                                            "Update own user profile",
+                                            "Access FAQ and official documents"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "ROLE_ADMIN": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Administrator"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "System administrators with full access to all functionality"
+                                    },
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "All ROLE_USER permissions",
+                                            "Create, update, and delete establishments",
+                                            "Manage all entities (categories, domains, grades, mentions, labels, etc.)",
+                                            "Create, update, and delete references and accreditations",
+                                            "Manage FAQ items and official documents",
+                                            "Access admin statistics and analytics",
+                                            "Export data in various formats",
+                                            "Manage user accounts and assign roles",
+                                            "Full system administration"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "ROLE_ESTABLISHMENT": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Establishment User"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Institution representatives with limited access to manage their own establishment data"
+                                    },
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "All ROLE_USER permissions",
+                                            "Update own establishment information (address, contact details, indicators)",
+                                            "Manage own establishment profile and logo",
+                                            "Update establishment description and basic information",
+                                            "View own establishment statistics"
+                                        ]
+                                    },
+                                    "restrictions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "Can only modify their associated establishment (linked via associated_establishment field)",
+                                            "Cannot create or delete establishments",
+                                            "Cannot manage system-wide entities",
+                                            "Cannot access admin statistics",
+                                            "Cannot export data"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "authentication_requirements": {
+                        "properties": {
+                            "public_endpoints": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/establishments",
+                                    "GET /api/establishments/{id}",
+                                    "GET /api/map/markers",
+                                    "GET /api/compare",
+                                    "GET /api/domains",
+                                    "GET /api/categories",
+                                    "GET /api/faq_items",
+                                    "GET /api/official_documents",
+                                    "POST /api/contact"
+                                ]
+                            },
+                            "authenticated_endpoints": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "GET /api/me",
+                                    "PUT /api/me",
+                                    "POST /api/me/searches",
+                                    "GET /api/me/searches",
+                                    "DELETE /api/me/searches/{id}"
+                                ]
+                            },
+                            "admin_only_endpoints": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "POST /api/establishments",
+                                    "DELETE /api/establishments/{id}",
+                                    "All CRUD operations on /api/categories, /api/domains, etc.",
+                                    "GET /api/admin/stats/*",
+                                    "GET /api/admin/export/*"
+                                ]
+                            },
+                            "establishment_user_endpoints": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "PUT /api/establishments/{id} (own establishment only)"
+                                ]
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "UserRole": {
+                "title": "User Role",
+                "description": "Available user roles in the system",
+                "type": "string",
+                "enum": [
+                    "ROLE_USER",
+                    "ROLE_ADMIN",
+                    "ROLE_ESTABLISHMENT"
+                ],
+                "example": "ROLE_USER"
+            },
+            "RoleValidationRules": {
+                "title": "Role Validation Rules",
+                "description": "Detailed validation rules and access control patterns for each role",
+                "properties": {
+                    "role_hierarchy": {
+                        "description": "Role inheritance and permission hierarchy",
+                        "properties": {
+                            "ROLE_USER": {
+                                "properties": {
+                                    "level": {
+                                        "description": "Base level role",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "inherits_from": {
+                                        "description": "No inheritance - base role",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": []
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "ROLE_ESTABLISHMENT": {
+                                "properties": {
+                                    "level": {
+                                        "description": "Enhanced user role with specific permissions",
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "inherits_from": {
+                                        "description": "Inherits all ROLE_USER permissions",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "ROLE_USER"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "ROLE_ADMIN": {
+                                "properties": {
+                                    "level": {
+                                        "description": "Highest level role with full system access",
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "inherits_from": {
+                                        "description": "Inherits all permissions from lower roles",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "ROLE_USER",
+                                            "ROLE_ESTABLISHMENT"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "validation_patterns": {
+                        "description": "Common validation patterns used across the API",
+                        "properties": {
+                            "authentication_required": {
+                                "properties": {
+                                    "middleware": {
+                                        "type": "string",
+                                        "example": "auth:sanctum"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Requires valid Bearer token in Authorization header"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "role_validation": {
+                                "properties": {
+                                    "middleware": {
+                                        "type": "string",
+                                        "example": "role:ROLE_ADMIN"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Requires user to have specific role in their roles array"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "ownership_validation": {
+                                "properties": {
+                                    "policy": {
+                                        "type": "string",
+                                        "example": "EstablishmentPolicy@update"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Uses Laravel Policy to check if user can modify specific resource"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "common_response_codes": {
+                        "description": "Standard HTTP response codes for role-based access",
+                        "properties": {
+                            "401": {
+                                "properties": {
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Unauthorized - Missing or invalid authentication token"
+                                    },
+                                    "body_example": {
+                                        "properties": {
+                                            "message": {
+                                                "type": "string",
+                                                "example": "Unauthenticated."
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "403": {
+                                "properties": {
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Forbidden - User lacks required role or permissions"
+                                    },
+                                    "body_example": {
+                                        "properties": {
+                                            "message": {
+                                                "type": "string",
+                                                "example": "Unauthorized. Insufficient permissions."
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "404": {
+                                "properties": {
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Not Found - Resource doesn't exist or user cannot access it"
+                                    },
+                                    "body_example": {
+                                        "properties": {
+                                            "message": {
+                                                "type": "string",
+                                                "example": "Resource not found."
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "role_assignment_rules": {
+                        "description": "Rules for how roles are assigned and managed",
+                        "properties": {
+                            "ROLE_USER": {
+                                "properties": {
+                                    "assignment": {
+                                        "type": "string",
+                                        "example": "Default role for all registered users"
+                                    },
+                                    "required_fields": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "name",
+                                            "email",
+                                            "password"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "ROLE_ESTABLISHMENT": {
+                                "properties": {
+                                    "assignment": {
+                                        "type": "string",
+                                        "example": "Assigned by admin to institution representatives"
+                                    },
+                                    "required_fields": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "name",
+                                            "email",
+                                            "password",
+                                            "associated_establishment"
+                                        ]
+                                    },
+                                    "validation": {
+                                        "type": "string",
+                                        "example": "associated_establishment must reference valid establishment ID"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "ROLE_ADMIN": {
+                                "properties": {
+                                    "assignment": {
+                                        "type": "string",
+                                        "example": "Assigned manually by existing admin or during system setup"
+                                    },
+                                    "restrictions": {
+                                        "type": "string",
+                                        "example": "Cannot be self-assigned; requires existing admin privileges"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
             "SearchHistory": {
                 "title": "Search History",
                 "description": "User search history entry",
@@ -5112,7 +6198,7 @@
             },
             "User": {
                 "title": "User",
-                "description": "User model",
+                "description": "User model with role-based access control",
                 "properties": {
                     "id": {
                         "type": "integer",
@@ -5128,15 +6214,17 @@
                         "example": "john@example.com"
                     },
                     "roles": {
+                        "description": "User roles determining access permissions. Available roles: ROLE_USER (regular user), ROLE_ADMIN (administrator with full access), ROLE_ESTABLISHMENT (institution user with limited access to own establishment)",
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "$ref": "#/components/schemas/UserRole"
                         },
                         "example": [
                             "ROLE_USER"
                         ]
                     },
                     "associated_establishment_id": {
+                        "description": "ID of associated establishment (required for ROLE_ESTABLISHMENT users)",
                         "type": "integer",
                         "example": null,
                         "nullable": true
@@ -5159,6 +6247,11 @@
                 "scheme": "bearer",
                 "bearerFormat": "JWT",
                 "description": "Enter token in format (Bearer <token>)"
+            },
+            "sanctum": {
+                "type": "http",
+                "description": "Laravel Sanctum token authentication. Role-based access control system with three main roles: ROLE_USER (regular users with read access and search history), ROLE_ADMIN (full system access including all CRUD operations and admin functions), ROLE_ESTABLISHMENT (institution users with limited access to manage their own establishment data only)",
+                "scheme": "bearer"
             }
         }
     },
@@ -5222,6 +6315,14 @@
         {
             "name": "Search History",
             "description": "Endpoints for managing user search history"
+        },
+        {
+            "name": "User Management",
+            "description": "Admin endpoints for managing users"
+        },
+        {
+            "name": "Authorization & Roles",
+            "description": "Role-based access control documentation and permissions"
         }
     ],
     "security": [

@@ -189,6 +189,7 @@ class AdminStatsController extends Controller
      * @OA\Get(
      *     path="/api/admin/stats/users-by-role",
      *     summary="Get user statistics by role",
+     *     description="Returns count of users for each role type. Available roles: ROLE_USER (regular users), ROLE_ADMIN (administrators), ROLE_ESTABLISHMENT (institution users)",
      *     tags={"Admin Statistics"},
      *     security={{"sanctum": {}}},
      *     @OA\Response(
@@ -196,15 +197,30 @@ class AdminStatsController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             type="array",
+     *             description="Array of role statistics",
      *             @OA\Items(
-     *                 @OA\Property(property="role", type="string"),
-     *                 @OA\Property(property="users_count", type="integer")
-     *             )
+     *                 @OA\Property(
+     *                     property="role",
+     *                     ref="#/components/schemas/UserRole",
+     *                     description="User role type"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="users_count",
+     *                     type="integer",
+     *                     description="Number of users with this role",
+     *                     example=15
+     *                 )
+     *             ),
+     *             example={
+     *                 {"role": "ROLE_USER", "users_count": 150},
+     *                 {"role": "ROLE_ADMIN", "users_count": 5},
+     *                 {"role": "ROLE_ESTABLISHMENT", "users_count": 25}
+     *             }
      *         )
      *     ),
      *     @OA\Response(
      *         response=403,
-     *         description="Access denied"
+     *         description="Access denied - Admin role required"
      *     )
      * )
      */
