@@ -160,7 +160,7 @@ class EstablishmentApiTest extends TestCase
         ]);
 
         // Make request to compare endpoint
-        $response = $this->get('/api/compare?ids[]=' . $establishment1->id . '&ids[]=' . $establishment2->id);
+        $response = $this->get('/api/establishments/compare?ids[]=' . $establishment1->id . '&ids[]=' . $establishment2->id);
 
         // Assert response
         $response->assertStatus(200)

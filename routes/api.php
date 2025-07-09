@@ -19,6 +19,7 @@ use App\Http\Controllers\API\AdminStatsController;
 use App\Http\Controllers\API\ExportController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\RoleDocumentationController;
+use App\Http\Controllers\API\GlobalSearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Role Documentation Route (Public)
 Route::get('/roles/documentation', [RoleDocumentationController::class, 'documentation']);
+
+// Global Search Route (Public)
+Route::get('/search', GlobalSearchController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     // User profile routes
@@ -70,10 +74,10 @@ Route::post('/contact', [ContactController::class, 'submit']);
 
 // Public Establishment Routes
 Route::get('/establishments/recent', [EstablishmentSpecialController::class, 'recent']);
+Route::get('/establishments/compare', [EstablishmentSpecialController::class, 'compare']);
 Route::get('/establishments', [EstablishmentController::class, 'index']);
 Route::get('/establishments/{establishment}', [EstablishmentController::class, 'show']);
 Route::get('/map/markers', [EstablishmentSpecialController::class, 'mapMarkers']);
-Route::get('/compare', [EstablishmentSpecialController::class, 'compare']);
 
 // Protected Establishment Routes (Admin Only)
 Route::middleware(['auth:sanctum', 'role:ROLE_ADMIN'])->group(function () {

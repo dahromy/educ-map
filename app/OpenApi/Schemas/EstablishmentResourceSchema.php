@@ -5,69 +5,55 @@ namespace App\OpenApi\Schemas;
 /**
  * @OA\Schema(
  *     schema="EstablishmentResource",
- *     title="Establishment Resource",
- *     description="Establishment resource for list view with enhanced details",
- *     @OA\Property(property="id", type="integer", example=1),
- *     @OA\Property(property="name", type="string", example="Ecole Supérieure des Sciences Agronomiques"),
- *     @OA\Property(property="abbreviation", type="string", example="ESSA"),
- *     @OA\Property(property="description", type="string", nullable=true, example="Leading agricultural sciences university in Madagascar"),
- *     @OA\Property(property="logo_url", type="string", nullable=true, example="https://educ-map.mg/storage/logos/essa.png"),
- *     @OA\Property(
- *         property="category",
- *         type="object",
- *         @OA\Property(property="id", type="integer", example=1),
- *         @OA\Property(property="name", type="string", example="Public University")
+ *     type="object",
+ *     @OA\Property(property="id", type="integer", description="The ID of the establishment."),
+ *     @OA\Property(property="name", type="string", description="The name of the establishment."),
+ *     @OA\Property(property="abbreviation", type="string", description="The abbreviation of the establishment."),
+ *     @OA\Property(property="description", type="string", description="The description of the establishment."),
+ *     @OA\Property(property="category", type="object",
+ *         @OA\Property(property="id", type="integer", description="The ID of the category."),
+ *         @OA\Property(property="name", type="string", description="The name of the category.")
  *     ),
- *     @OA\Property(
- *         property="location",
- *         type="object",
- *         @OA\Property(property="address", type="string", example="BP 175, 101 Antananarivo, Madagascar"),
- *         @OA\Property(property="region", type="string", example="Analamanga"),
- *         @OA\Property(property="city", type="string", example="Antananarivo"),
- *         @OA\Property(property="latitude", type="number", format="float", example=-18.916779),
- *         @OA\Property(property="longitude", type="number", format="float", example=47.520526)
+ *     @OA\Property(property="location", type="object",
+ *         @OA\Property(property="address", type="string", description="The address of the establishment."),
+ *         @OA\Property(property="region", type="string", description="The region of the establishment."),
+ *         @OA\Property(property="city", type="string", description="The city of the establishment."),
+ *         @OA\Property(property="latitude", type="number", description="The latitude of the establishment."),
+ *         @OA\Property(property="longitude", type="number", description="The longitude of the establishment.")
  *     ),
- *     @OA\Property(
- *         property="contact",
- *         type="object",
- *         @OA\Property(property="phone", type="string", nullable=true, example="+261 20 22 123 45"),
- *         @OA\Property(property="email", type="string", nullable=true, example="contact@essa.mg"),
- *         @OA\Property(property="website", type="string", nullable=true, example="https://www.essa.mg")
+ *     @OA\Property(property="contact", type="object",
+ *         @OA\Property(property="phone", type="string", description="The phone number of the establishment."),
+ *         @OA\Property(property="email", type="string", description="The email of the establishment."),
+ *         @OA\Property(property="website", type="string", description="The website of the establishment.")
  *     ),
- *     @OA\Property(
- *         property="indicators",
- *         type="object",
- *         @OA\Property(property="student_count", type="integer", nullable=true, example=2500),
- *         @OA\Property(property="success_rate", type="number", format="float", nullable=true, example=85.5),
- *         @OA\Property(property="professional_insertion_rate", type="number", format="float", nullable=true, example=78.2),
- *         @OA\Property(property="first_habilitation_year", type="integer", nullable=true, example=1995)
+ *     @OA\Property(property="indicators", type="object",
+ *         @OA\Property(property="student_count", type="integer", description="The number of students in the establishment."),
+ *         @OA\Property(property="success_rate", type="number", description="The success rate of the establishment."),
+ *         @OA\Property(property="professional_insertion_rate", type="number", description="The professional insertion rate of the establishment."),
+ *         @OA\Property(property="first_habilitation_year", type="integer", description="The first habilitation year of the establishment."),
+ *         @OA\Property(property="status", type="string", description="The status of the establishment."),
+ *         @OA\Property(property="international_partnerships", type="string", description="The international partnerships of the establishment.")
  *     ),
- *     @OA\Property(
- *         property="labels",
- *         type="array",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="id", type="integer", example=1),
- *             @OA\Property(property="name", type="string", example="Excellence"),
- *             @OA\Property(property="description", type="string", example="Institution of excellence recognized for outstanding performance")
+ *     @OA\Property(property="labels", type="array",
+ *         @OA\Items(type="object",
+ *             @OA\Property(property="id", type="integer", description="The ID of the label."),
+ *             @OA\Property(property="name", type="string", description="The name of the label."),
+ *             @OA\Property(property="description", type="string", description="The description of the label.")
  *         )
  *     ),
- *     @OA\Property(
- *         property="programs_summary",
- *         type="object",
- *         @OA\Property(property="total_programs", type="integer", example=15),
- *         @OA\Property(property="domains_count", type="integer", example=5),
- *         @OA\Property(property="grades_offered", type="array", @OA\Items(type="string"), example={"Licence", "Master", "Doctorat"}),
- *         @OA\Property(property="departments_count", type="integer", example=8)
+ *     @OA\Property(property="programs_summary", type="object",
+ *         @OA\Property(property="total_programs", type="integer", description="The total number of programs in the establishment."),
+ *         @OA\Property(property="domains_count", type="integer", description="The number of domains in the establishment."),
+ *         @OA\Property(property="grades_offered", type="array", @OA\Items(type="string"), description="The grades offered in the establishment."),
+ *         @OA\Property(property="departments_count", type="integer", description="The number of departments in the establishment.")
  *     ),
- *     @OA\Property(
- *         property="recent_accreditation",
- *         type="object",
- *         @OA\Property(property="has_recent", type="boolean", example=true),
- *         @OA\Property(property="accreditation_date", type="string", format="date", nullable=true, example="2024-09-15")
+ *     @OA\Property(property="recent_accreditation", type="object",
+ *         @OA\Property(property="has_recent", type="boolean", description="Whether the establishment has recent accreditation."),
+ *         @OA\Property(property="accreditation_date", type="string", description="The date of the recent accreditation.")
  *     ),
- *     @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-15T10:30:00.000000Z"),
- *     @OA\Property(property="updated_at", type="string", format="date-time", example="2024-12-01T14:45:00.000000Z")
+ *     @OA\Property(property="logo_url", type="string", description="The URL of the logo of the establishment."),
+ *     @OA\Property(property="created_at", type="string", description="The creation date of the establishment."),
+ *     @OA\Property(property="updated_at", type="string", description="The update date of the establishment.")
  * )
  */
 class EstablishmentResourceSchema

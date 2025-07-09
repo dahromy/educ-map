@@ -43,6 +43,8 @@ class UpdateEstablishmentRequest extends FormRequest
             'first_habilitation_year' => 'nullable|integer|min:1900|max:' . date('Y'),
             'labels' => 'nullable|array',
             'labels.*' => 'exists:labels,id',
+            'status' => 'nullable|string|in:private,public,semi-private',
+            'international_partnerships' => 'nullable|string',
         ];
     }
 }

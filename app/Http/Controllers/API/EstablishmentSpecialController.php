@@ -107,7 +107,7 @@ class EstablishmentSpecialController extends Controller
      * @return AnonymousResourceCollection
      *
      * @OA\Get(
-     *     path="/api/compare",
+     *     path="/api/establishments/compare",
      *     summary="Compare multiple establishments side by side",
      *     tags={"Map & Comparison"},
      *     @OA\Parameter(
@@ -124,7 +124,7 @@ class EstablishmentSpecialController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Comparison data for selected establishments",
+     *         description="Comprehensive comparison data for selected establishments",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
@@ -135,11 +135,48 @@ class EstablishmentSpecialController extends Controller
      *                     @OA\Property(property="id", type="integer", example=1),
      *                     @OA\Property(property="name", type="string"),
      *                     @OA\Property(property="abbreviation", type="string"),
-     *                     @OA\Property(property="student_count", type="integer"),
-     *                     @OA\Property(property="success_rate", type="number", format="float"),
-     *                     @OA\Property(property="professional_insertion_rate", type="number", format="float"),
-     *                     @OA\Property(property="tuition_fees_info", type="string"),
-     *                     @OA\Property(property="program_duration_info", type="string")
+     *                     @OA\Property(property="description", type="string"),
+     *                     @OA\Property(property="logo_url", type="string"),
+     *                     @OA\Property(property="category", type="object",
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="name", type="string")
+     *                     ),
+     *                     @OA\Property(property="location", type="object",
+     *                         @OA\Property(property="address", type="string"),
+     *                         @OA\Property(property="region", type="string"),
+     *                         @OA\Property(property="city", type="string"),
+     *                         @OA\Property(property="latitude", type="number"),
+     *                         @OA\Property(property="longitude", type="number")
+     *                     ),
+     *                     @OA\Property(property="contact", type="object",
+     *                         @OA\Property(property="phone", type="string"),
+     *                         @OA\Property(property="email", type="string"),
+     *                         @OA\Property(property="website", type="string")
+     *                     ),
+     *                     @OA\Property(property="indicators", type="object",
+     *                         @OA\Property(property="student_count", type="integer"),
+     *                         @OA\Property(property="success_rate", type="number"),
+     *                         @OA\Property(property="professional_insertion_rate", type="number"),
+     *                         @OA\Property(property="first_habilitation_year", type="integer"),
+     *                         @OA\Property(property="status", type="string"),
+     *                         @OA\Property(property="international_partnerships", type="string")
+     *                     ),
+     *                     @OA\Property(property="academic_offerings", type="object",
+     *                         @OA\Property(property="total_programs", type="integer"),
+     *                         @OA\Property(property="departments_count", type="integer"),
+     *                         @OA\Property(property="domains_offered", type="array", @OA\Items(type="string")),
+     *                         @OA\Property(property="grades_offered", type="array", @OA\Items(type="string")),
+     *                         @OA\Property(property="tuition_fees", type="array", @OA\Items(type="string")),
+     *                         @OA\Property(property="program_durations", type="array", @OA\Items(type="string"))
+     *                     ),
+     *                     @OA\Property(property="labels", type="array", @OA\Items(type="object")),
+     *                     @OA\Property(property="recent_accreditation", type="object",
+     *                         @OA\Property(property="has_recent", type="boolean"),
+     *                         @OA\Property(property="accreditation_date", type="string"),
+     *                         @OA\Property(property="reference_type", type="string")
+     *                     ),
+     *                     @OA\Property(property="created_at", type="string"),
+     *                     @OA\Property(property="updated_at", type="string")
      *                 )
      *             )
      *         )
@@ -152,7 +189,15 @@ class EstablishmentSpecialController extends Controller
      */
     public function compare(CompareEstablishmentsRequest $request): AnonymousResourceCollection
     {
-        $establishments = Establishment::with('programOfferings')
+        $establishments = Establishment::with([
+            'category',
+            'labels',
+            'programOfferings.domain',
+            'programOfferings.grade',
+            'programOfferings.mention',
+            'programOfferings.department',
+            'programOfferings.accreditations'
+        ])
             ->whereIn('id', $request->ids)
             ->get();
 

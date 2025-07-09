@@ -43,6 +43,8 @@ class EstablishmentDetailResource extends JsonResource
                 'success_rate' => $this->success_rate,
                 'professional_insertion_rate' => $this->professional_insertion_rate,
                 'first_habilitation_year' => $this->first_habilitation_year,
+                'status' => $this->status,
+                'international_partnerships' => $this->international_partnerships,
             ],
             'departments' => DepartmentResource::collection($this->whenLoaded('departments')),
             'program_offerings' => ProgramOfferingResource::collection($this->whenLoaded('programOfferings')),

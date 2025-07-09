@@ -35,6 +35,8 @@ class Establishment extends Model
         'success_rate',
         'professional_insertion_rate',
         'first_habilitation_year',
+        'status',
+        'international_partnerships',
     ];
 
     /**

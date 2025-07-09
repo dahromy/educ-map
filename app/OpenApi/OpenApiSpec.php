@@ -235,6 +235,49 @@ namespace App\OpenApi;
  *         )
  *     )
  * )
+ *
+ * @OA\Get(
+ *     path="/api/search",
+ *     operationId="globalSearch",
+ *     tags={"Establishments"},
+ *     summary="Global search for establishments with advanced filters",
+ *     description="Performs a global search on establishments using various filters and returns a paginated list.",
+ *     @OA\Parameter(name="q", in="query", required=false, description="Full-text search across establishment fields", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="name", in="query", required=false, description="Partial match on establishment name", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="abbreviation", in="query", required=false, description="Partial match on abbreviation", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="description", in="query", required=false, description="Partial match on description", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="region", in="query", required=false, description="Exact match on region", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="city", in="query", required=false, description="Exact match on city", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="address", in="query", required=false, description="Partial match on address", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="category_id", in="query", required=false, description="Filter by category ID", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="category_name", in="query", required=false, description="Filter by category name", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="status", in="query", required=false, description="Filter by status", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="domain_id", in="query", required=false, description="Filter by domain ID", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="domain_name", in="query", required=false, description="Filter by domain name", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="grade_id", in="query", required=false, description="Filter by grade ID", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="grade_name", in="query", required=false, description="Filter by grade name", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="mention_id", in="query", required=false, description="Filter by mention ID", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="mention_name", in="query", required=false, description="Filter by mention name", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="label_id", in="query", required=false, description="Filter by label ID", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="label_name", in="query", required=false, description="Filter by label name", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="student_count_min", in="query", required=false, description="Minimum student count", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="student_count_max", in="query", required=false, description="Maximum student count", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="success_rate_min", in="query", required=false, description="Minimum success rate", @OA\Schema(type="number", format="float")),
+ *     @OA\Parameter(name="success_rate_max", in="query", required=false, description="Maximum success rate", @OA\Schema(type="number", format="float")),
+ *     @OA\Parameter(name="page", in="query", required=false, description="Page number for pagination", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="per_page", in="query", required=false, description="Number of results per page", @OA\Schema(type="integer")),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Paginated list of establishments matching search criteria",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/EstablishmentResource")),
+ *             @OA\Property(property="meta", type="object", description="Pagination metadata")
+ *         )
+ *     ),
+ *     @OA\Response(response=400, description="Invalid request parameters"),
+ *     @OA\Response(response=500, description="Server error")
+ * )
  */
 class OpenApiSpec
 {

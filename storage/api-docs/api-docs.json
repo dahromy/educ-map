@@ -2352,14 +2352,14 @@
                 }
             }
         },
-        "/api/compare": {
+        "/api/establishments/compare": {
             "get": {
                 "tags": [
                     "Map & Comparison"
                 ],
                 "summary": "Compare multiple establishments side by side",
                 "description": "Compare multiple establishments side by side.",
-                "operationId": "bbc5057d4eee10926f6828ee3c16d337",
+                "operationId": "fcd2c997a202cf78e2577dd7563faa79",
                 "parameters": [
                     {
                         "name": "ids[]",
@@ -2378,7 +2378,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Comparison data for selected establishments",
+                        "description": "Comprehensive comparison data for selected establishments",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2397,21 +2397,139 @@
                                                     "abbreviation": {
                                                         "type": "string"
                                                     },
-                                                    "student_count": {
-                                                        "type": "integer"
-                                                    },
-                                                    "success_rate": {
-                                                        "type": "number",
-                                                        "format": "float"
-                                                    },
-                                                    "professional_insertion_rate": {
-                                                        "type": "number",
-                                                        "format": "float"
-                                                    },
-                                                    "tuition_fees_info": {
+                                                    "description": {
                                                         "type": "string"
                                                     },
-                                                    "program_duration_info": {
+                                                    "logo_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "category": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "name": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "location": {
+                                                        "properties": {
+                                                            "address": {
+                                                                "type": "string"
+                                                            },
+                                                            "region": {
+                                                                "type": "string"
+                                                            },
+                                                            "city": {
+                                                                "type": "string"
+                                                            },
+                                                            "latitude": {
+                                                                "type": "number"
+                                                            },
+                                                            "longitude": {
+                                                                "type": "number"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "contact": {
+                                                        "properties": {
+                                                            "phone": {
+                                                                "type": "string"
+                                                            },
+                                                            "email": {
+                                                                "type": "string"
+                                                            },
+                                                            "website": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "indicators": {
+                                                        "properties": {
+                                                            "student_count": {
+                                                                "type": "integer"
+                                                            },
+                                                            "success_rate": {
+                                                                "type": "number"
+                                                            },
+                                                            "professional_insertion_rate": {
+                                                                "type": "number"
+                                                            },
+                                                            "first_habilitation_year": {
+                                                                "type": "integer"
+                                                            },
+                                                            "status": {
+                                                                "type": "string"
+                                                            },
+                                                            "international_partnerships": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "academic_offerings": {
+                                                        "properties": {
+                                                            "total_programs": {
+                                                                "type": "integer"
+                                                            },
+                                                            "departments_count": {
+                                                                "type": "integer"
+                                                            },
+                                                            "domains_offered": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "grades_offered": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "tuition_fees": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "program_durations": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "labels": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "recent_accreditation": {
+                                                        "properties": {
+                                                            "has_recent": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "accreditation_date": {
+                                                                "type": "string"
+                                                            },
+                                                            "reference_type": {
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "updated_at": {
                                                         "type": "string"
                                                     }
                                                 },
@@ -4415,6 +4533,266 @@
                     }
                 ]
             }
+        },
+        "/api/search": {
+            "get": {
+                "tags": [
+                    "Establishments"
+                ],
+                "summary": "Global search for establishments with advanced filters",
+                "description": "Performs a global search on establishments using various filters and returns a paginated list.",
+                "operationId": "globalSearch",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Full-text search across establishment fields",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Partial match on establishment name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "abbreviation",
+                        "in": "query",
+                        "description": "Partial match on abbreviation",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Partial match on description",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "region",
+                        "in": "query",
+                        "description": "Exact match on region",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Exact match on city",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Partial match on address",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Filter by category ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "category_name",
+                        "in": "query",
+                        "description": "Filter by category name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "domain_id",
+                        "in": "query",
+                        "description": "Filter by domain ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "domain_name",
+                        "in": "query",
+                        "description": "Filter by domain name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "grade_id",
+                        "in": "query",
+                        "description": "Filter by grade ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "grade_name",
+                        "in": "query",
+                        "description": "Filter by grade name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "mention_id",
+                        "in": "query",
+                        "description": "Filter by mention ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "mention_name",
+                        "in": "query",
+                        "description": "Filter by mention name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "label_id",
+                        "in": "query",
+                        "description": "Filter by label ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "label_name",
+                        "in": "query",
+                        "description": "Filter by label name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "student_count_min",
+                        "in": "query",
+                        "description": "Minimum student count",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "student_count_max",
+                        "in": "query",
+                        "description": "Maximum student count",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "success_rate_min",
+                        "in": "query",
+                        "description": "Minimum success rate",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "success_rate_max",
+                        "in": "query",
+                        "description": "Maximum success rate",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated list of establishments matching search criteria",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/EstablishmentResource"
+                                            }
+                                        },
+                                        "meta": {
+                                            "description": "Pagination metadata",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request parameters"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -5225,40 +5603,32 @@
                 "type": "object"
             },
             "EstablishmentResource": {
-                "title": "Establishment Resource",
-                "description": "Establishment resource for list view with enhanced details",
                 "properties": {
                     "id": {
-                        "type": "integer",
-                        "example": 1
+                        "description": "The ID of the establishment.",
+                        "type": "integer"
                     },
                     "name": {
-                        "type": "string",
-                        "example": "Ecole Supérieure des Sciences Agronomiques"
+                        "description": "The name of the establishment.",
+                        "type": "string"
                     },
                     "abbreviation": {
-                        "type": "string",
-                        "example": "ESSA"
+                        "description": "The abbreviation of the establishment.",
+                        "type": "string"
                     },
                     "description": {
-                        "type": "string",
-                        "example": "Leading agricultural sciences university in Madagascar",
-                        "nullable": true
-                    },
-                    "logo_url": {
-                        "type": "string",
-                        "example": "https://educ-map.mg/storage/logos/essa.png",
-                        "nullable": true
+                        "description": "The description of the establishment.",
+                        "type": "string"
                     },
                     "category": {
                         "properties": {
                             "id": {
-                                "type": "integer",
-                                "example": 1
+                                "description": "The ID of the category.",
+                                "type": "integer"
                             },
                             "name": {
-                                "type": "string",
-                                "example": "Public University"
+                                "description": "The name of the category.",
+                                "type": "string"
                             }
                         },
                         "type": "object"
@@ -5266,26 +5636,24 @@
                     "location": {
                         "properties": {
                             "address": {
-                                "type": "string",
-                                "example": "BP 175, 101 Antananarivo, Madagascar"
+                                "description": "The address of the establishment.",
+                                "type": "string"
                             },
                             "region": {
-                                "type": "string",
-                                "example": "Analamanga"
+                                "description": "The region of the establishment.",
+                                "type": "string"
                             },
                             "city": {
-                                "type": "string",
-                                "example": "Antananarivo"
+                                "description": "The city of the establishment.",
+                                "type": "string"
                             },
                             "latitude": {
-                                "type": "number",
-                                "format": "float",
-                                "example": -18.916779
+                                "description": "The latitude of the establishment.",
+                                "type": "number"
                             },
                             "longitude": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 47.520526
+                                "description": "The longitude of the establishment.",
+                                "type": "number"
                             }
                         },
                         "type": "object"
@@ -5293,19 +5661,16 @@
                     "contact": {
                         "properties": {
                             "phone": {
-                                "type": "string",
-                                "example": "+261 20 22 123 45",
-                                "nullable": true
+                                "description": "The phone number of the establishment.",
+                                "type": "string"
                             },
                             "email": {
-                                "type": "string",
-                                "example": "contact@essa.mg",
-                                "nullable": true
+                                "description": "The email of the establishment.",
+                                "type": "string"
                             },
                             "website": {
-                                "type": "string",
-                                "example": "https://www.essa.mg",
-                                "nullable": true
+                                "description": "The website of the establishment.",
+                                "type": "string"
                             }
                         },
                         "type": "object"
@@ -5313,26 +5678,28 @@
                     "indicators": {
                         "properties": {
                             "student_count": {
-                                "type": "integer",
-                                "example": 2500,
-                                "nullable": true
+                                "description": "The number of students in the establishment.",
+                                "type": "integer"
                             },
                             "success_rate": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 85.5,
-                                "nullable": true
+                                "description": "The success rate of the establishment.",
+                                "type": "number"
                             },
                             "professional_insertion_rate": {
-                                "type": "number",
-                                "format": "float",
-                                "example": 78.2,
-                                "nullable": true
+                                "description": "The professional insertion rate of the establishment.",
+                                "type": "number"
                             },
                             "first_habilitation_year": {
-                                "type": "integer",
-                                "example": 1995,
-                                "nullable": true
+                                "description": "The first habilitation year of the establishment.",
+                                "type": "integer"
+                            },
+                            "status": {
+                                "description": "The status of the establishment.",
+                                "type": "string"
+                            },
+                            "international_partnerships": {
+                                "description": "The international partnerships of the establishment.",
+                                "type": "string"
                             }
                         },
                         "type": "object"
@@ -5342,16 +5709,16 @@
                         "items": {
                             "properties": {
                                 "id": {
-                                    "type": "integer",
-                                    "example": 1
+                                    "description": "The ID of the label.",
+                                    "type": "integer"
                                 },
                                 "name": {
-                                    "type": "string",
-                                    "example": "Excellence"
+                                    "description": "The name of the label.",
+                                    "type": "string"
                                 },
                                 "description": {
-                                    "type": "string",
-                                    "example": "Institution of excellence recognized for outstanding performance"
+                                    "description": "The description of the label.",
+                                    "type": "string"
                                 }
                             },
                             "type": "object"
@@ -5360,27 +5727,23 @@
                     "programs_summary": {
                         "properties": {
                             "total_programs": {
-                                "type": "integer",
-                                "example": 15
+                                "description": "The total number of programs in the establishment.",
+                                "type": "integer"
                             },
                             "domains_count": {
-                                "type": "integer",
-                                "example": 5
+                                "description": "The number of domains in the establishment.",
+                                "type": "integer"
                             },
                             "grades_offered": {
+                                "description": "The grades offered in the establishment.",
                                 "type": "array",
                                 "items": {
                                     "type": "string"
-                                },
-                                "example": [
-                                    "Licence",
-                                    "Master",
-                                    "Doctorat"
-                                ]
+                                }
                             },
                             "departments_count": {
-                                "type": "integer",
-                                "example": 8
+                                "description": "The number of departments in the establishment.",
+                                "type": "integer"
                             }
                         },
                         "type": "object"
@@ -5388,27 +5751,27 @@
                     "recent_accreditation": {
                         "properties": {
                             "has_recent": {
-                                "type": "boolean",
-                                "example": true
+                                "description": "Whether the establishment has recent accreditation.",
+                                "type": "boolean"
                             },
                             "accreditation_date": {
-                                "type": "string",
-                                "format": "date",
-                                "example": "2024-09-15",
-                                "nullable": true
+                                "description": "The date of the recent accreditation.",
+                                "type": "string"
                             }
                         },
                         "type": "object"
                     },
+                    "logo_url": {
+                        "description": "The URL of the logo of the establishment.",
+                        "type": "string"
+                    },
                     "created_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2024-01-15T10:30:00.000000Z"
+                        "description": "The creation date of the establishment.",
+                        "type": "string"
                     },
                     "updated_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2024-12-01T14:45:00.000000Z"
+                        "description": "The update date of the establishment.",
+                        "type": "string"
                     }
                 },
                 "type": "object"

@@ -43,6 +43,8 @@ class EstablishmentResource extends JsonResource
                 'success_rate' => $this->success_rate,
                 'professional_insertion_rate' => $this->professional_insertion_rate,
                 'first_habilitation_year' => $this->first_habilitation_year,
+                'status' => $this->status,
+                'international_partnerships' => $this->international_partnerships,
             ],
             'labels' => $this->whenLoaded('labels', function () {
                 return $this->labels->map(function ($label) {
