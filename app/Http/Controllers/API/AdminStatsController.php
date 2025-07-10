@@ -240,10 +240,10 @@ class AdminStatsController extends Controller
     {
         $driver = DB::getDriverName();
         if ($driver === 'pgsql') {
-            // PostgreSQL: extract each role from JSON array and count users per role
+            // PostgreSQL: cast roles to jsonb before extracting
             $stats = DB::table('users')
                 ->select(DB::raw('role, COUNT(*) as users_count'))
-                ->fromRaw('users, jsonb_array_elements_text(roles) as role')
+                ->fromRaw('users, jsonb_array_elements_text(roles::jsonb) as role')
                 ->whereNotNull('roles')
                 ->groupBy('role')
                 ->orderByDesc('users_count')
@@ -263,7 +263,6 @@ class AdminStatsController extends Controller
                 ->orderByDesc('users_count')
                 ->get()
                 ->map(function ($item) {
-                    // For SQLite, roles is a string (e.g., '["ROLE_USER"]'), so decode it
                     $roles = json_decode($item->roles, true);
                     if (is_array($roles)) {
                         foreach ($roles as $role) {
