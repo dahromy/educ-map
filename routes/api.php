@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
@@ -36,6 +35,18 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Role Documentation Route (Public)
 Route::get('/roles/documentation', [RoleDocumentationController::class, 'documentation']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    // User profile routes
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/me', [AuthController::class, 'update']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Search history routes
+    Route::get('/me/searches', [SearchHistoryController::class, 'index']);
+    Route::post('/me/searches', [SearchHistoryController::class, 'store']);
+    Route::delete('/me/searches/{search}', [SearchHistoryController::class, 'destroy']);
+});
 
 // Public Category Routes
 Route::get('/categories', [CategoryController::class, 'index']);
