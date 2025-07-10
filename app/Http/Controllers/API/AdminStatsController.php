@@ -172,12 +172,24 @@ class AdminStatsController extends Controller
      */
     public function habilitationsByYear(): JsonResponse
     {
-        $stats = Reference::select(DB::raw('strftime("%Y", main_date) as year'), DB::raw('COUNT(*) as habilitations_count'))
-            ->whereNotNull('main_date')
-            ->groupBy(DB::raw('strftime("%Y", main_date)'))
-            ->orderBy('year', 'desc')
-            ->get();
-
+        $driver = DB::getDriverName();
+        if ($driver === 'pgsql') {
+            // PostgreSQL: use EXTRACT(YEAR FROM main_date)
+            $stats = DB::table('references')
+                ->select(DB::raw('EXTRACT(YEAR FROM main_date) as year'), DB::raw('COUNT(*) as habilitations_count'))
+                ->whereNotNull('main_date')
+                ->groupBy(DB::raw('EXTRACT(YEAR FROM main_date)'))
+                ->orderByDesc('year')
+                ->get();
+        } else {
+            // SQLite: use strftime('%Y', main_date)
+            $stats = DB::table('references')
+                ->select(DB::raw('strftime("%Y", main_date) as year'), DB::raw('COUNT(*) as habilitations_count'))
+                ->whereNotNull('main_date')
+                ->groupBy(DB::raw('strftime("%Y", main_date)'))
+                ->orderByDesc('year')
+                ->get();
+        }
         return response()->json($stats);
     }
 
@@ -226,18 +238,47 @@ class AdminStatsController extends Controller
      */
     public function usersByRole(): JsonResponse
     {
-        $stats = User::select('roles', DB::raw('COUNT(*) as users_count'))
-            ->whereNotNull('roles')
-            ->groupBy('roles')
-            ->orderBy('users_count', 'desc')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'role' => $item->roles,
-                    'users_count' => $item->users_count,
-                ];
-            });
-
+        $driver = DB::getDriverName();
+        if ($driver === 'pgsql') {
+            // PostgreSQL: extract each role from JSON array and count users per role
+            $stats = DB::table('users')
+                ->select(DB::raw('role, COUNT(*) as users_count'))
+                ->fromRaw('users, jsonb_array_elements_text(roles) as role')
+                ->whereNotNull('roles')
+                ->groupBy('role')
+                ->orderByDesc('users_count')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'role' => $item->role,
+                        'users_count' => $item->users_count,
+                    ];
+                });
+        } else {
+            // SQLite (testing): treat roles as a string and group by it
+            $stats = DB::table('users')
+                ->select('roles', DB::raw('COUNT(*) as users_count'))
+                ->whereNotNull('roles')
+                ->groupBy('roles')
+                ->orderByDesc('users_count')
+                ->get()
+                ->map(function ($item) {
+                    // For SQLite, roles is a string (e.g., '["ROLE_USER"]'), so decode it
+                    $roles = json_decode($item->roles, true);
+                    if (is_array($roles)) {
+                        foreach ($roles as $role) {
+                            return [
+                                'role' => $role,
+                                'users_count' => $item->users_count,
+                            ];
+                        }
+                    }
+                    return [
+                        'role' => $item->roles,
+                        'users_count' => $item->users_count,
+                    ];
+                });
+        }
         return response()->json($stats);
     }
 
