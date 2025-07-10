@@ -37,6 +37,8 @@ class IndexEstablishmentRequest extends FormRequest
             'min_student_count' => 'sometimes|integer|min:0',
             'max_student_count' => 'sometimes|integer|min:0',
             'city' => 'sometimes|string|max:100',
+            'q' => 'sometimes|string|max:255',
+            'query' => 'sometimes|string|max:255',
         ];
     }
 }

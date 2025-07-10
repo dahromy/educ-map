@@ -33,6 +33,13 @@ class EstablishmentController extends Controller
      *     summary="Get a paginated list of establishments with optional filtering and sorting",
      *     tags={"Establishments"},
      *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="General search query for filtering establishments",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
      *         name="region",
      *         in="query",
      *         description="Filter by region name (exact match)",
@@ -247,6 +254,49 @@ class EstablishmentController extends Controller
             ->filterByCategory($request->category)
             ->filterByCity($request->city)
             ->filterByStudentCount($request->min_student_count, $request->max_student_count);
+
+        // Unified search: q or query (case-insensitive, all fields/relations)
+        $search = strtolower($request->input('q', $request->input('query', '')));
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(abbreviation) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(description) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(address) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(region) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(city) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(phone) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(website) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(logo_url) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('CAST(student_count AS TEXT) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('CAST(success_rate AS TEXT) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('CAST(professional_insertion_rate AS TEXT) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('CAST(first_habilitation_year AS TEXT) LIKE ?', ["%{$search}%"])
+                    // Category name
+                    ->orWhereHas('category', function ($cat) use ($search) {
+                        $cat->whereRaw('LOWER(category_name) LIKE ?', ["%{$search}%"]);
+                    })
+                    // Departments name
+                    ->orWhereHas('departments', function ($dept) use ($search) {
+                        $dept->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"]);
+                    })
+                    // Labels name
+                    ->orWhereHas('labels', function ($label) use ($search) {
+                        $label->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"]);
+                    })
+                    // Program Offerings: domain, grade, mention
+                    ->orWhereHas('programOfferings.domain', function ($domain) use ($search) {
+                        $domain->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"]);
+                    })
+                    ->orWhereHas('programOfferings.grade', function ($grade) use ($search) {
+                        $grade->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"]);
+                    })
+                    ->orWhereHas('programOfferings.mention', function ($mention) use ($search) {
+                        $mention->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"]);
+                    });
+            });
+        }
 
         // Apply advanced filters if provided
         if ($request->has('domain')) {

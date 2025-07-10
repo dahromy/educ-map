@@ -11,7 +11,7 @@
     },
     "servers": [
         {
-            "url": "https://educ-map.lndo.site",
+            "url": "http://localhost:44829",
             "description": "Educ-Map API Server"
         },
         {
@@ -1438,6 +1438,15 @@
                 "description": "Display a listing of the establishments with filtering options.",
                 "operationId": "f49f6c92f5a721f0b976ba540c3c4bc8",
                 "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "General search query for filtering establishments",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "region",
                         "in": "query",
@@ -4532,266 +4541,6 @@
                         "sanctum": []
                     }
                 ]
-            }
-        },
-        "/api/search": {
-            "get": {
-                "tags": [
-                    "Establishments"
-                ],
-                "summary": "Global search for establishments with advanced filters",
-                "description": "Performs a global search on establishments using various filters and returns a paginated list.",
-                "operationId": "globalSearch",
-                "parameters": [
-                    {
-                        "name": "q",
-                        "in": "query",
-                        "description": "Full-text search across establishment fields",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Partial match on establishment name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "abbreviation",
-                        "in": "query",
-                        "description": "Partial match on abbreviation",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "description": "Partial match on description",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "region",
-                        "in": "query",
-                        "description": "Exact match on region",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "city",
-                        "in": "query",
-                        "description": "Exact match on city",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "description": "Partial match on address",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "category_id",
-                        "in": "query",
-                        "description": "Filter by category ID",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "category_name",
-                        "in": "query",
-                        "description": "Filter by category name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Filter by status",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "domain_id",
-                        "in": "query",
-                        "description": "Filter by domain ID",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "domain_name",
-                        "in": "query",
-                        "description": "Filter by domain name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "grade_id",
-                        "in": "query",
-                        "description": "Filter by grade ID",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "grade_name",
-                        "in": "query",
-                        "description": "Filter by grade name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "mention_id",
-                        "in": "query",
-                        "description": "Filter by mention ID",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "mention_name",
-                        "in": "query",
-                        "description": "Filter by mention name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "label_id",
-                        "in": "query",
-                        "description": "Filter by label ID",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "label_name",
-                        "in": "query",
-                        "description": "Filter by label name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "student_count_min",
-                        "in": "query",
-                        "description": "Minimum student count",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "student_count_max",
-                        "in": "query",
-                        "description": "Maximum student count",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "success_rate_min",
-                        "in": "query",
-                        "description": "Minimum success rate",
-                        "required": false,
-                        "schema": {
-                            "type": "number",
-                            "format": "float"
-                        }
-                    },
-                    {
-                        "name": "success_rate_max",
-                        "in": "query",
-                        "description": "Maximum success rate",
-                        "required": false,
-                        "schema": {
-                            "type": "number",
-                            "format": "float"
-                        }
-                    },
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "Page number for pagination",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "Number of results per page",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Paginated list of establishments matching search criteria",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/EstablishmentResource"
-                                            }
-                                        },
-                                        "meta": {
-                                            "description": "Pagination metadata",
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request parameters"
-                    },
-                    "500": {
-                        "description": "Server error"
-                    }
-                }
             }
         }
     },
