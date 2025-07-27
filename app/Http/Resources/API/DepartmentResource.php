@@ -20,6 +20,7 @@ class DepartmentResource extends JsonResource
             'name' => $this->name,
             'abbreviation' => $this->abbreviation,
             'description' => $this->description,
+            'program_offerings' => ProgramOfferingResource::collection($this->whenLoaded('programOfferings')),
         ];
     }
 }

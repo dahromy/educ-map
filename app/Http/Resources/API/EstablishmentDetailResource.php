@@ -47,7 +47,7 @@ class EstablishmentDetailResource extends JsonResource
                 'international_partnerships' => $this->international_partnerships,
             ],
             'departments' => DepartmentResource::collection($this->whenLoaded('departments')),
-            'program_offerings' => ProgramOfferingResource::collection($this->whenLoaded('programOfferings')),
+            'program_offerings' => ProgramOfferingResource::collection($this->whenLoaded('directProgramOfferings')),
             'labels' => LabelResource::collection($this->whenLoaded('labels')),
             'logo_url' => $this->logo_url,
             'created_at' => $this->created_at,

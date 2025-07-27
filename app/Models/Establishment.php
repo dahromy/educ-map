@@ -78,6 +78,14 @@ class Establishment extends Model
     }
 
     /**
+     * Get only the direct program offerings (not belonging to any department).
+     */
+    public function directProgramOfferings(): HasMany
+    {
+        return $this->hasMany(ProgramOffering::class)->whereNull('department_id');
+    }
+
+    /**
      * Get the labels for the establishment.
      */
     public function labels(): BelongsToMany

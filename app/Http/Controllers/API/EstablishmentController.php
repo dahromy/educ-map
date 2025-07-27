@@ -9,6 +9,9 @@ use App\Http\Requests\API\UpdateEstablishmentRequest;
 use App\Http\Resources\API\EstablishmentDetailResource;
 use App\Http\Resources\API\EstablishmentResource;
 use App\Models\Establishment;
+use App\Models\Department;
+use App\Models\ProgramOffering;
+use Illuminate\Support\Facades\DB;
 use App\Policies\EstablishmentPolicy;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -459,14 +462,19 @@ class EstablishmentController extends Controller
         return new EstablishmentDetailResource(
             $establishment->load([
                 'category',
-                'departments',
+                'departments.programOfferings',
+                'departments.programOfferings.domain',
+                'departments.programOfferings.grade',
+                'departments.programOfferings.mention',
+                'departments.programOfferings.accreditations',
+                'departments.programOfferings.accreditations.reference',
                 'labels',
-                'programOfferings',
-                'programOfferings.domain',
-                'programOfferings.grade',
-                'programOfferings.mention',
-                'programOfferings.accreditations',
-                'programOfferings.accreditations.reference'
+                'directProgramOfferings',
+                'directProgramOfferings.domain',
+                'directProgramOfferings.grade',
+                'directProgramOfferings.mention',
+                'directProgramOfferings.accreditations',
+                'directProgramOfferings.accreditations.reference'
             ])
         );
     }
@@ -507,7 +515,45 @@ class EstablishmentController extends Controller
      *             @OA\Property(property="success_rate", type="number", format="float"),
      *             @OA\Property(property="professional_insertion_rate", type="number", format="float"),
      *             @OA\Property(property="first_habilitation_year", type="integer"),
-     *             @OA\Property(property="labels", type="array", @OA\Items(type="integer"))
+     *             @OA\Property(property="labels", type="array", @OA\Items(type="integer")),
+     *             @OA\Property(
+     *                 property="departments",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", description="Department ID (for updates, omit for new departments)"),
+     *                     @OA\Property(property="name", type="string", description="Department name"),
+     *                     @OA\Property(property="abbreviation", type="string", description="Department abbreviation"),
+     *                     @OA\Property(property="description", type="string", description="Department description"),
+     *                     @OA\Property(
+     *                         property="program_offerings",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             @OA\Property(property="id", type="integer", description="Program ID (for updates, omit for new programs)"),
+     *                             @OA\Property(property="domain_id", type="integer", description="Domain ID"),
+     *                             @OA\Property(property="grade_id", type="integer", description="Grade ID"),
+     *                             @OA\Property(property="mention_id", type="integer", description="Mention ID"),
+     *                             @OA\Property(property="tuition_fees_info", type="string", description="Tuition fees information"),
+     *                             @OA\Property(property="program_duration_info", type="string", description="Program duration information")
+     *                         )
+     *                     )
+     *                 )
+     *             ),
+     *             @OA\Property(
+     *                 property="program_offerings",
+     *                 type="array",
+     *                 description="Direct program offerings (without department)",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", description="Program ID (for updates, omit for new programs)"),
+     *                     @OA\Property(property="domain_id", type="integer", description="Domain ID"),
+     *                     @OA\Property(property="grade_id", type="integer", description="Grade ID"),
+     *                     @OA\Property(property="mention_id", type="integer", description="Mention ID"),
+     *                     @OA\Property(property="tuition_fees_info", type="string", description="Tuition fees information"),
+     *                     @OA\Property(property="program_duration_info", type="string", description="Program duration information")
+     *                 )
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -523,16 +569,41 @@ class EstablishmentController extends Controller
      */
     public function update(UpdateEstablishmentRequest $request, Establishment $establishment): EstablishmentDetailResource
     {
-        $establishment->update($request->validated());
+        return DB::transaction(function () use ($request, $establishment) {
+            // Update basic establishment fields
+            $establishment->update($request->validated());
 
-        // Sync labels if provided
-        if ($request->has('labels')) {
-            $establishment->labels()->sync($request->labels);
-        }
+            // Sync labels if provided
+            if ($request->has('labels')) {
+                $establishment->labels()->sync($request->labels);
+            }
 
-        return new EstablishmentDetailResource(
-            $establishment->load(['category', 'departments', 'labels'])
-        );
+            // Sync departments if provided
+            if ($request->has('departments')) {
+                $this->syncDepartments($establishment, $request->input('departments'));
+            }
+
+            // Sync direct program offerings if provided
+            if ($request->has('program_offerings')) {
+                $this->syncDirectProgramOfferings($establishment, $request->input('program_offerings'));
+            }
+
+            // Load relationships for response
+            return new EstablishmentDetailResource(
+                $establishment->load([
+                    'category',
+                    'departments',
+                    'labels',
+                    'programOfferings',
+                    'programOfferings.department',
+                    'programOfferings.domain',
+                    'programOfferings.grade',
+                    'programOfferings.mention',
+                    'programOfferings.accreditations',
+                    'programOfferings.accreditations.reference'
+                ])
+            );
+        });
     }
 
     /**
@@ -586,8 +657,148 @@ class EstablishmentController extends Controller
 
         $establishment->delete();
 
-        return response()->json([
-            'message' => 'Establishment successfully deleted'
-        ]);
+        return new JsonResponse(['message' => 'Establishment deleted successfully.']);
+    }
+
+    /**
+     * Sync departments for the establishment.
+     *
+     * @param Establishment $establishment
+     * @param array $departmentsData
+     * @return void
+     */
+    private function syncDepartments(Establishment $establishment, array $departmentsData): void
+    {
+        $existingDepartmentIds = [];
+
+        foreach ($departmentsData as $departmentData) {
+            if (isset($departmentData['id'])) {
+                // Update existing department
+                $department = Department::find($departmentData['id']);
+                if ($department && $department->establishment_id === $establishment->id) {
+                    $department->update([
+                        'name' => $departmentData['name'],
+                        'abbreviation' => $departmentData['abbreviation'] ?? null,
+                        'description' => $departmentData['description'] ?? null,
+                    ]);
+                    $existingDepartmentIds[] = $department->id;
+                }
+            } else {
+                // Create new department
+                $department = Department::create([
+                    'name' => $departmentData['name'],
+                    'abbreviation' => $departmentData['abbreviation'] ?? null,
+                    'description' => $departmentData['description'] ?? null,
+                    'establishment_id' => $establishment->id,
+                ]);
+                $existingDepartmentIds[] = $department->id;
+            }
+
+            // Sync program offerings for this department
+            if (isset($departmentData['program_offerings']) && $department) {
+                $this->syncProgramOfferings($establishment, $department, $departmentData['program_offerings']);
+            }
+        }
+
+        // Delete departments that are not in the request (if any departments were provided)
+        if (!empty($departmentsData)) {
+            $establishment->departments()
+                ->whereNotIn('id', $existingDepartmentIds)
+                ->delete();
+        }
+    }
+
+    /**
+     * Sync program offerings for a department.
+     *
+     * @param Establishment $establishment
+     * @param Department $department
+     * @param array $programOfferingsData
+     * @return void
+     */
+    private function syncProgramOfferings(Establishment $establishment, Department $department, array $programOfferingsData): void
+    {
+        $existingProgramIds = [];
+
+        foreach ($programOfferingsData as $programData) {
+            if (isset($programData['id'])) {
+                // Update existing program offering
+                $program = ProgramOffering::find($programData['id']);
+                if ($program && $program->establishment_id === $establishment->id && $program->department_id === $department->id) {
+                    $program->update([
+                        'domain_id' => $programData['domain_id'],
+                        'grade_id' => $programData['grade_id'],
+                        'mention_id' => $programData['mention_id'],
+                        'tuition_fees_info' => $programData['tuition_fees_info'] ?? null,
+                        'program_duration_info' => $programData['program_duration_info'] ?? null,
+                    ]);
+                    $existingProgramIds[] = $program->id;
+                }
+            } else {
+                // Create new program offering
+                $program = ProgramOffering::create([
+                    'establishment_id' => $establishment->id,
+                    'department_id' => $department->id,
+                    'domain_id' => $programData['domain_id'],
+                    'grade_id' => $programData['grade_id'],
+                    'mention_id' => $programData['mention_id'],
+                    'tuition_fees_info' => $programData['tuition_fees_info'] ?? null,
+                    'program_duration_info' => $programData['program_duration_info'] ?? null,
+                ]);
+                $existingProgramIds[] = $program->id;
+            }
+        }
+
+        // Delete program offerings that are not in the request for this department
+        $department->programOfferings()
+            ->whereNotIn('id', $existingProgramIds)
+            ->delete();
+    }
+
+    /**
+     * Sync direct program offerings for the establishment (no department).
+     *
+     * @param Establishment $establishment
+     * @param array $programOfferingsData
+     * @return void
+     */
+    private function syncDirectProgramOfferings(Establishment $establishment, array $programOfferingsData): void
+    {
+        $existingProgramIds = [];
+
+        foreach ($programOfferingsData as $programData) {
+            if (isset($programData['id'])) {
+                // Update existing direct program offering
+                $program = ProgramOffering::find($programData['id']);
+                if ($program && $program->establishment_id === $establishment->id && $program->department_id === null) {
+                    $program->update([
+                        'domain_id' => $programData['domain_id'],
+                        'grade_id' => $programData['grade_id'],
+                        'mention_id' => $programData['mention_id'],
+                        'tuition_fees_info' => $programData['tuition_fees_info'] ?? null,
+                        'program_duration_info' => $programData['program_duration_info'] ?? null,
+                    ]);
+                    $existingProgramIds[] = $program->id;
+                }
+            } else {
+                // Create new direct program offering (no department)
+                $program = ProgramOffering::create([
+                    'establishment_id' => $establishment->id,
+                    'department_id' => null, // Direct to establishment
+                    'domain_id' => $programData['domain_id'],
+                    'grade_id' => $programData['grade_id'],
+                    'mention_id' => $programData['mention_id'],
+                    'tuition_fees_info' => $programData['tuition_fees_info'] ?? null,
+                    'program_duration_info' => $programData['program_duration_info'] ?? null,
+                ]);
+                $existingProgramIds[] = $program->id;
+            }
+        }
+
+        // Delete direct program offerings that are not in the request
+        $establishment->programOfferings()
+            ->whereNull('department_id') // Only direct programs
+            ->whereNotIn('id', $existingProgramIds)
+            ->delete();
     }
 }

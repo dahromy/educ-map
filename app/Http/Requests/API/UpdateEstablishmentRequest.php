@@ -4,6 +4,7 @@ namespace App\Http\Requests\API;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Validator;
 
 class UpdateEstablishmentRequest extends FormRequest
 {
@@ -45,6 +46,103 @@ class UpdateEstablishmentRequest extends FormRequest
             'labels.*' => 'exists:labels,id',
             'status' => 'nullable|string|in:private,public,semi-private',
             'international_partnerships' => 'nullable|string',
+
+            // Department validation rules
+            'departments' => 'nullable|array',
+            'departments.*.id' => 'nullable|exists:departments,id',
+            'departments.*.name' => 'required_with:departments.*|string|max:255',
+            'departments.*.abbreviation' => 'nullable|string|max:50',
+            'departments.*.description' => 'nullable|string',
+
+            // Program offering validation rules
+            'departments.*.program_offerings' => 'nullable|array',
+            'departments.*.program_offerings.*.id' => 'nullable|exists:program_offerings,id',
+            'departments.*.program_offerings.*.domain_id' => 'required_with:departments.*.program_offerings.*|exists:domains,id',
+            'departments.*.program_offerings.*.grade_id' => 'required_with:departments.*.program_offerings.*|exists:grades,id',
+            'departments.*.program_offerings.*.mention_id' => 'required_with:departments.*.program_offerings.*|exists:mentions,id',
+            'departments.*.program_offerings.*.tuition_fees_info' => 'nullable|string',
+            'departments.*.program_offerings.*.program_duration_info' => 'nullable|string',
+
+            // Direct program offering validation rules (establishment-level, no department)
+            'program_offerings' => 'nullable|array',
+            'program_offerings.*.id' => 'nullable|exists:program_offerings,id',
+            'program_offerings.*.domain_id' => 'required_with:program_offerings.*|exists:domains,id',
+            'program_offerings.*.grade_id' => 'required_with:program_offerings.*|exists:grades,id',
+            'program_offerings.*.mention_id' => 'required_with:program_offerings.*|exists:mentions,id',
+            'program_offerings.*.tuition_fees_info' => 'nullable|string',
+            'program_offerings.*.program_duration_info' => 'nullable|string',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            $establishment = $this->route('establishment');
+
+            // Validate that existing departments belong to this establishment
+            if ($this->has('departments')) {
+                foreach ($this->input('departments', []) as $index => $departmentData) {
+                    if (isset($departmentData['id'])) {
+                        $department = \App\Models\Department::find($departmentData['id']);
+                        if ($department && $department->establishment_id !== $establishment->id) {
+                            $validator->errors()->add(
+                                "departments.{$index}.id",
+                                'Department does not belong to this establishment.'
+                            );
+                        }
+
+                        // Validate that existing program offerings belong to this establishment and department
+                        if (isset($departmentData['program_offerings'])) {
+                            foreach ($departmentData['program_offerings'] as $progIndex => $programData) {
+                                if (isset($programData['id'])) {
+                                    $program = \App\Models\ProgramOffering::find($programData['id']);
+                                    if ($program) {
+                                        if ($program->establishment_id !== $establishment->id) {
+                                            $validator->errors()->add(
+                                                "departments.{$index}.program_offerings.{$progIndex}.id",
+                                                'Program offering does not belong to this establishment.'
+                                            );
+                                        }
+                                        if ($program->department_id !== $department->id) {
+                                            $validator->errors()->add(
+                                                "departments.{$index}.program_offerings.{$progIndex}.id",
+                                                'Program offering does not belong to this department.'
+                                            );
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Validate that existing direct program offerings belong to this establishment
+            if ($this->has('program_offerings')) {
+                foreach ($this->input('program_offerings', []) as $index => $programData) {
+                    if (isset($programData['id'])) {
+                        $program = \App\Models\ProgramOffering::find($programData['id']);
+                        if ($program) {
+                            if ($program->establishment_id !== $establishment->id) {
+                                $validator->errors()->add(
+                                    "program_offerings.{$index}.id",
+                                    'Program offering does not belong to this establishment.'
+                                );
+                            }
+                            // Ensure it's a direct program (no department)
+                            if ($program->department_id !== null) {
+                                $validator->errors()->add(
+                                    "program_offerings.{$index}.id",
+                                    'This program offering belongs to a department. Use departments.*.program_offerings instead.'
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 }

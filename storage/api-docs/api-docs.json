@@ -2171,6 +2171,95 @@
                                         "items": {
                                             "type": "integer"
                                         }
+                                    },
+                                    "departments": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Department ID (for updates, omit for new departments)",
+                                                    "type": "integer"
+                                                },
+                                                "name": {
+                                                    "description": "Department name",
+                                                    "type": "string"
+                                                },
+                                                "abbreviation": {
+                                                    "description": "Department abbreviation",
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "description": "Department description",
+                                                    "type": "string"
+                                                },
+                                                "program_offerings": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "description": "Program ID (for updates, omit for new programs)",
+                                                                "type": "integer"
+                                                            },
+                                                            "domain_id": {
+                                                                "description": "Domain ID",
+                                                                "type": "integer"
+                                                            },
+                                                            "grade_id": {
+                                                                "description": "Grade ID",
+                                                                "type": "integer"
+                                                            },
+                                                            "mention_id": {
+                                                                "description": "Mention ID",
+                                                                "type": "integer"
+                                                            },
+                                                            "tuition_fees_info": {
+                                                                "description": "Tuition fees information",
+                                                                "type": "string"
+                                                            },
+                                                            "program_duration_info": {
+                                                                "description": "Program duration information",
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "program_offerings": {
+                                        "description": "Direct program offerings (without department)",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Program ID (for updates, omit for new programs)",
+                                                    "type": "integer"
+                                                },
+                                                "domain_id": {
+                                                    "description": "Domain ID",
+                                                    "type": "integer"
+                                                },
+                                                "grade_id": {
+                                                    "description": "Grade ID",
+                                                    "type": "integer"
+                                                },
+                                                "mention_id": {
+                                                    "description": "Mention ID",
+                                                    "type": "integer"
+                                                },
+                                                "tuition_fees_info": {
+                                                    "description": "Tuition fees information",
+                                                    "type": "string"
+                                                },
+                                                "program_duration_info": {
+                                                    "description": "Program duration information",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
                                     }
                                 },
                                 "type": "object"
