@@ -272,10 +272,11 @@ class EstablishmentController extends Controller
                     ->orWhereRaw('LOWER(email) LIKE ?', ["%{$search}%"])
                     ->orWhereRaw('LOWER(website) LIKE ?', ["%{$search}%"])
                     ->orWhereRaw('LOWER(logo_url) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw('CAST(student_count AS TEXT) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw('CAST(success_rate AS TEXT) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw('CAST(professional_insertion_rate AS TEXT) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw('CAST(first_habilitation_year AS TEXT) LIKE ?', ["%{$search}%"])
+                    // Fixed: Use database-agnostic approach for numeric fields
+                    ->orWhere('student_count', 'LIKE', "%{$search}%")
+                    ->orWhere('success_rate', 'LIKE', "%{$search}%")
+                    ->orWhere('professional_insertion_rate', 'LIKE', "%{$search}%")
+                    ->orWhere('first_habilitation_year', 'LIKE', "%{$search}%")
                     // Category name
                     ->orWhereHas('category', function ($cat) use ($search) {
                         $cat->whereRaw('LOWER(category_name) LIKE ?', ["%{$search}%"]);

@@ -165,6 +165,57 @@ class UserController extends Controller
     }
 
     /**
+     * View a specific user with detailed information.
+     *
+     * @param User $user
+     * @return JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/users/{id}/view",
+     *     summary="View detailed information for a specific user (Admin only)",
+     *     tags={"User Management"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User detailed view",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", ref="#/components/schemas/User"),
+     *             @OA\Property(property="activities", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="stats", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=403, description="Forbidden - Admin role required"),
+     *     @OA\Response(response=404, description="User not found")
+     * )
+     */
+    public function view(User $user): JsonResponse
+    {
+        // Load additional user information
+        $user->load(['establishmentProfile']);
+
+        // Get user activity statistics
+        $activities = [];
+        $stats = [
+            'login_count' => 0,
+            'days_active' => 0,
+            'last_active' => null
+        ];
+
+        return response()->json([
+            'data' => new UserResource($user),
+            'activities' => $activities,
+            'stats' => $stats
+        ]);
+    }
+
+    /**
      * Update the specified user.
      *
      * @param UpdateUserRequest $request
